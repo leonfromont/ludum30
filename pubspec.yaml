@@ -1,0 +1,6 @@
+name: ludum30
+description: A sample web application
+dependencies:
+  ad:
+    git: https://github.com/leonfromont/ad.git
+  browser: any
