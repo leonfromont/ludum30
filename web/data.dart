@@ -204,7 +204,7 @@ class WaveGenerator {
     WaveTemplate template = positions();
     List<Vector> pos = template.all();
 
-    // boo
+    // back!!!
     var spawn = [];
     var halfsies = [];
     int half = template.back.length ~/ 2; 
@@ -225,10 +225,27 @@ class WaveGenerator {
       ents.add(spawn[f](template.back[f]));
     }
 
-    /*for(Vector v in pos) {
-      var m = r.choice(types);
-      ents.add(StraightEnemy(v));
-    }*/
+    // front
+    spawn = [];
+    halfsies = [];
+    half = template.front.length ~/ 2; 
+    for(int i = 0; i < half; i++) {
+      halfsies.add(r.choice(types));
+    }
+      
+    spawn.addAll(halfsies);
+
+    // if we are odd pad the center with another one
+    if(template.front.length % 2 != 0) {
+      spawn.add(r.choice(types));
+    }
+
+    spawn.addAll(halfsies.reversed);
+
+    for(int f = 0; f < template.front.length; f++) {
+      ents.add(spawn[f](template.front[f]));
+    }
+
 
     return new Wave(dt, ents);
   }
