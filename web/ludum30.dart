@@ -167,11 +167,15 @@ class SpriteSheet {
 
 
 ImageElement el = new ImageElement();
+ImageElement bg = new ImageElement();
 
 
 class MyState extends State { 
   static int WIDTH = 512;
   static int HEIGHT = 512;
+
+  int a = 0;
+  int b = -WIDTH;
 
 
   static int STATE_GAMEPLAY = 0;
@@ -190,6 +194,7 @@ class MyState extends State {
   
   MyState() {
     el.src = './spritesheet.png';
+    bg.src = './background.png';
     loadWorld();
   }
 
@@ -360,7 +365,22 @@ class MyState extends State {
       ctx.clearRect(0, 0, WIDTH, HEIGHT);
       ctx.fillStyle = '#452555';
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+
+      a += 1;
+      ctx.drawImage(bg, a, 0);
+
+      if(a > WIDTH) {
+        a = -WIDTH;
+      }
+
+      b += 1;
+      if(b > WIDTH) {
+        b = -WIDTH;
+      }
+
       
+      ctx.drawImage(bg, b, 0);
       
       for (var e in entities) {
         if (render.match(e)) {
