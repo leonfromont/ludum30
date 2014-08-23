@@ -148,6 +148,20 @@ class SpriteSheet {
   static Rect bullet = new Rect(0, 0, 32, 32);
   static Rect monster = new Rect(64, 0, 64, 64);
   static Rect Explosion = new Rect(0, 64, 64, 64);
+  static Rect HeartEmpty = new Rect(64, 64, 32, 32);
+  static Rect HeartFull = new Rect(96, 64, 32, 32);
+
+  static render(CanvasRenderingContext2D ctx, Rect r, int x, int y) {
+          ctx.drawImageScaledFromSource(el, 
+              r.left, 
+              r.top, 
+              r.width, 
+              r.height, 
+              x,
+              y,
+              r.width, 
+              r.height);
+  }
 }
 
 
@@ -365,10 +379,23 @@ class MyState extends State {
       
       
       // HUD 
-      ctx.font="20px Georgia";
-      ctx.fillStyle = '#00ff00';
-      String text = "HEALTH: " + player[Types.PLAYERHEALTH].current.toString();
-      ctx.fillText(text, 400, 32);
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, 512, 64);
+      int hudtop = 300;
+      int hudwidth = 36;
+      int hudpad = 16;
+
+
+      for(int i = 0; i < 3; i++) {
+        Rect s;
+        if(player[Types.PLAYERHEALTH].current > i) {
+          s = SpriteSheet.HeartFull;
+        } else {
+          s = SpriteSheet.HeartEmpty;
+        }
+
+        SpriteSheet.render(ctx, s, hudtop + (i * hudwidth), hudpad);
+      }
 
       int top = 16;
       int height = 32;
@@ -376,8 +403,9 @@ class MyState extends State {
       int horizontalpad = 16;
       //ctx.fillRect(500, top, 4, height);
 
+
       
-      ctx.fillStyle = '#000000';
+      ctx.fillStyle = '#438c43';
       ctx.fillRect(horizontalpad, top, 256, height + 2 * padding);
 
       ctx.fillStyle = '#ff0000';
