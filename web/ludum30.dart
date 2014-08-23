@@ -7,6 +7,13 @@ import 'package:ad/ad.dart';
 part 'data.dart';
 
 
+class Wave {
+  num dt;
+  List<Entity> entities;
+  bool spawned = false;
+
+  Wave(this.dt, this.entities);
+}
 
 class Entity {
   static int nextId = 0;
@@ -143,6 +150,16 @@ ImageElement el = new ImageElement();
 
 
 class MyState extends State { 
+  static int WIDTH = 512;
+  static int HEIGHT = 512;
+
+  num totalTime = 0.0;
+
+  static int PLAY = 0;
+  static int GAMEOVER = 1;
+
+  List<Wave> waves = [];
+
   List<Entity> entities = [];
   var player = null;
   
@@ -160,10 +177,20 @@ class MyState extends State {
     entities.add(e);
     player = e;
 
-    entities.add(StraightEnemy());
+
+    waves.add(wave1());
   }
   
   void update (num dt) {
+    totalTime += dt;
+    for(Wave wave in waves) {
+      if(!wave.spawned && wave.dt < totalTime) {
+        entities.addAll(wave.entities);
+        wave.spawned = true;
+      }
+    }
+
+    
     var collidables = [];
     for(var e in entities) {
       if(e.comps[Types.COLLISION] != null) {
@@ -281,7 +308,9 @@ class MyState extends State {
   
   void render(CanvasRenderingContext2D ctx) {
     Aspect render = new Aspect([Types.AABB, Types.RENDER]);
-    ctx.clearRect(0, 0, 512, 512);
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
+    ctx.fillStyle = '#452555';
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
     
     for (var e in entities) {
       if (render.match(e)) {

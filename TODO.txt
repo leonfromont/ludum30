@@ -1,8 +1,9 @@
-make player get hit
 
-one hit die?
-nah have a health bar
+waves
+proper HUD for health
+game over and title screen
+name
 
-make enemies shoot
-first just straight
-then at player
+destroy bullets when they're out of screen
+
+background?

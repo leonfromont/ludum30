@@ -48,15 +48,26 @@ dynamic _EnemyBullet(Rect v) {
   return e;
 }
 
-dynamic StraightEnemy() {
+dynamic StraightEnemy(Vector origin) {
+  var b = origin.clone();
+  b.y -= 100;
+  
   var e = new Entity({
           Types.RENDER : new Render(SpriteSheet.monster),
-          Types.AABB : new Rect(400, 128, 68, 68),
+          Types.AABB : new Rect(origin.x, origin.y, 68, 68),
           Types.COLLISION : new CollisionMask('enemy', ['playerbullet']),
-          Types.PATH : new Path([new Vector(400, 44),  new Vector(400, 128)], 1.0),
+          Types.PATH : new Path([origin.clone(),  b], 1.0),
           Types.ENEMYBULLET : new EnemyBullet(1000.0)
   });
 
 
   return e;
+}
+
+Wave wave1() {
+  var e1 = StraightEnemy(new Vector(400, 400));
+  var e2 = StraightEnemy(new Vector(400, 300));
+  var e3 = StraightEnemy(new Vector(400, 200));
+
+  return new Wave(1.0, [e1, e2, e3]);
 }
