@@ -79,5 +79,13 @@ Wave wave1() {
   var e1 = StraightEnemy(new Vector(400, 400));
   var e3 = StraightEnemy(new Vector(400, 200));
 
-  return new Wave(1.0, [e1, e3]);
+  return new Wave(1000, [e1, e3]);
+}
+
+Wave wave2(dt) {
+  var e1 = StraightEnemy(new Vector(400, 400));
+  var e2 = StraightEnemy(new Vector(400, 300));
+  var e3 = StraightEnemy(new Vector(400, 200));
+
+  return new Wave(dt, [e1, e2, e3]);
 }

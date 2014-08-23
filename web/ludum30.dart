@@ -184,7 +184,7 @@ class MyState extends State {
     Entity e = Player();
     entities.add(e);
     player = e;
-    waves.add(wave1());
+    waves = [wave1(), wave2(10000), wave2(30000)];
   }
   
   void update(num dt) {
@@ -364,11 +364,30 @@ class MyState extends State {
       }
       
       
-      
+      // HUD 
       ctx.font="20px Georgia";
       ctx.fillStyle = '#00ff00';
-      String text = player[Types.PLAYERHEALTH].current.toString();
-      ctx.fillText(text, 32, 32);
+      String text = "HEALTH: " + player[Types.PLAYERHEALTH].current.toString();
+      ctx.fillText(text, 400, 32);
+
+      int top = 16;
+      int height = 32;
+      int padding = 4;
+      int horizontalpad = 16;
+      //ctx.fillRect(500, top, 4, height);
+
+      
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(horizontalpad, top, 256, height + 2 * padding);
+
+      ctx.fillStyle = '#ff0000';
+      for(var wave in waves) {
+        ctx.fillRect(horizontalpad + (wave.dt / 1000).toInt(), top + padding, 4, height);
+      }
+
+      ctx.fillStyle = '#00ff00';
+      ctx.fillRect(horizontalpad + (totalTime / 1000).toInt(), top + padding, 4, height);
+
     } else if (STATE_CURRENT == STATE_GAMEOVER) {
       ctx.font="20px Georgia";
       ctx.fillStyle = '#00ff00';
