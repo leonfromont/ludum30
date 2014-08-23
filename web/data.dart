@@ -172,15 +172,34 @@ Wave wave2(dt) {
   return new Wave(dt, [e1, e2, e3]);
 }
 
+class WaveTemplate {
+  List<Vector> front;
+  List<Vector> back;
+
+  WaveTemplate(this.back, this.front);
+  
+  List<Vector> all() {
+    var result = [];
+    result.addAll(back);
+    result.addAll(back);
+    return result;
+  }
+}
+
 class WaveGenerator {
 
   Rand r = new Rand();
 
   Wave gen(dt) {
+    // if we are even do half the wave then flip it
+    // if we are odd...
+    // center can we do whatever
+    // still need to do either side
+
     var types = [Charger, AimEnemy, StraightEnemy];
 
     List<Entity> ents = [];
-    List<Vector> pos = positions();
+    List<Vector> pos = positions().all();
     for(Vector v in pos) {
       var m = r.choice(types);
       ents.add(StraightEnemy(v));
@@ -201,36 +220,39 @@ class WaveGenerator {
   }
 
   // generate positions on our wave grid
-  List<Vector> positions() {
-    var results = [];
+  WaveTemplate positions() {
+
+    int overflow = 5;
     int t = r.range(7, 9);
 
     // now... max we can have in back wave is 5
     // anymore we jam in the front wave
     int backwave = t;
-    if(t > 5) {
+    if(t > overflow) {
       backwave = 5;
     }
 
     var ys = ypositions(backwave);
+    List<Vector> _backwave = [];
     for(var y in ys) {
       var e = new Vector(400, y);
-      results.add(e);
+      _backwave.add(e);
     }
 
     // then the rest we put in front
     int frontwave = 0;
-    if(t > 5) {
+    if(t > overflow) {
       frontwave = t - 5;
     }
 
     ys = ypositions(frontwave);
+    List<Vector> _frontwave = [];
     for(var y in ys) {
       var e = new Vector(300, y);
-      results.add(e);
+      _frontwave.add(e);
     }
 
-    return results;
+    return new WaveTemplate(_backwave, _frontwave);
   }
 }
 
