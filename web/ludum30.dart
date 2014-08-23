@@ -150,6 +150,8 @@ class SpriteSheet {
   static Rect Explosion = new Rect(0, 64, 64, 64);
   static Rect HeartEmpty = new Rect(64, 64, 32, 32);
   static Rect HeartFull = new Rect(96, 64, 32, 32);
+  static Rect Background1 = new Rect(0, 480, 512, 32);
+  static Rect Background2 = new Rect(0, 448, 512, 32);
 
   static render(CanvasRenderingContext2D ctx, Rect r, int x, int y) {
           ctx.drawImageScaledFromSource(el, 
@@ -167,7 +169,6 @@ class SpriteSheet {
 
 
 ImageElement el = new ImageElement();
-ImageElement bg = new ImageElement();
 
 
 class MyState extends State { 
@@ -194,7 +195,6 @@ class MyState extends State {
   
   MyState() {
     el.src = './spritesheet.png';
-    bg.src = './background.png';
     loadWorld();
   }
 
@@ -368,7 +368,8 @@ class MyState extends State {
 
 
       a += 1;
-      ctx.drawImage(bg, a, 0);
+      //ctx.drawImage(bg, a, 0);
+      SpriteSheet.render(ctx, SpriteSheet.Background1, a, 480);
 
       if(a > WIDTH) {
         a = -WIDTH;
@@ -380,7 +381,8 @@ class MyState extends State {
       }
 
       
-      ctx.drawImage(bg, b, 0);
+      //ctx.drawImage(bg, b, 0);
+      SpriteSheet.render(ctx, SpriteSheet.Background2, b, 480);
       
       for (var e in entities) {
         if (render.match(e)) {
