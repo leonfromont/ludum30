@@ -134,6 +134,7 @@ class PlayerHealth extends Component {
 class CollisionMask extends Component {
   String name;
   List<String> mask;
+  int ignore = 0;
 
   CollisionMask(this.name, this.mask);
 }
@@ -282,6 +283,12 @@ class MyState extends State {
       }
     }
 
+    for (var e in entities) {
+      var collide = e[Types.COLLISION];
+      if(collide != null && collide.ignore > 0) {
+        collide.ignore -= 1;
+      }
+    }
 
     for (var e in entities) {
       var flicker = e[Types.FLICKER];
@@ -351,22 +358,29 @@ class MyState extends State {
       var e = Explosion(p.a[Types.AABB].topleft);
       entities.add(e);
 
-      if(p.a[Types.PLAYERHEALTH] != null) {
+      if(p.a[Types.PLAYERHEALTH] != null && p.a[Types.COLLISION].ignore <= 0) {
         p.a[Types.PLAYERHEALTH].current -= 1;
         p.a[Types.FLICKER] = new Flicker(Constants.FLICKER_FREQ, Constants.FLICKER_DURATION);
+        p.a[Types.COLLISION].ignore = Constants.FLICKER_DURATION;
         entities.remove(p.b);
         continue;
       }
 
-      if(p.b[Types.PLAYERHEALTH] != null) {
+      if(p.b[Types.PLAYERHEALTH] != null && p.b[Types.COLLISION].ignore <= 0) {
         p.b[Types.PLAYERHEALTH].current -= 1;
         p.b[Types.FLICKER] = new Flicker(Constants.FLICKER_FREQ, Constants.FLICKER_DURATION);
+        p.b[Types.COLLISION].ignore = Constants.FLICKER_DURATION;
         entities.remove(p.a);
         continue;
       }
-
-      entities.remove(p.a);
-      entities.remove(p.b);
+      
+      if(p.a != player) {
+        entities.remove(p.a);
+      }
+      
+      if(p.b != player) {
+        entities.remove(p.b);
+      }
     }
 
 
