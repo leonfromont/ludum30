@@ -13,3 +13,6 @@ need a bit of random on cooldown times
 
 
 should be able to shoot chargers?
+
+cooldown when hit
+enemies shouldn't go off screen on path

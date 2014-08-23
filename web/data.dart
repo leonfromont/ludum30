@@ -101,7 +101,7 @@ dynamic StraightEnemy(Vector origin) {
           Types.AABB : new Rect(origin.x, origin.y, 68, 68),
           Types.COLLISION : new CollisionMask('enemy', ['playerbullet']),
           Types.PATH : new Path([origin.clone(),  b], 1.5),
-          Types.ENEMYBULLET : new EnemyBullet(3000.0)
+          Types.ENEMYBULLET : new EnemyBullet(1500.0)
   });
 
   return e;
@@ -109,14 +109,14 @@ dynamic StraightEnemy(Vector origin) {
 
 dynamic AimEnemy(Vector origin) {
   var b = origin.clone();
-  b.y -= 100;
+  b.y -= 50;
   
   var e = new Entity({
           Types.RENDER : new Render(SpriteSheet.monsterpurple),
           Types.AABB : new Rect(origin.x, origin.y, 68, 68),
           Types.COLLISION : new CollisionMask('enemy', ['playerbullet']),
           Types.PATH : new Path([origin.clone(),  b], 1.5),
-          Types.ENEMYBULLET : new EnemyBullet(3000.0, aim : true)
+          Types.ENEMYBULLET : new EnemyBullet(1500.0, aim : true)
   });
 
 
@@ -185,6 +185,10 @@ Wave wave2(dt) {
 }
 
 List<Wave> makewaves() {
-    var waves = [monkey(2), wave3(10000), wave2(20000)];
+    var waves = [];
+    for(int i = 0; i < 10; i++) {
+      waves.add(monkey(i * 5000));
+    }
+    //var waves = [monkey(2), wave3(10000), wave2(20000)];
     return waves;
 }

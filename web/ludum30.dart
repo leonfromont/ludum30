@@ -239,7 +239,7 @@ class MyState extends State {
       return;
     }
 
-    if(totalTime > 25000) {
+    if(totalTime > 10000 + 10 * 10000) {
       STATE_CURRENT = STATE_WON;
     }
 
