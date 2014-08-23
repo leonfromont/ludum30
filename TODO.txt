@@ -7,8 +7,9 @@ high score i.e. distance
 
 levels?
 
-player bullets and enemy bullets should be different color
 stop player from moving off screen
+chargers should go in random directions
+need a bit of random on cooldown times
 
 
 should be able to shoot chargers?

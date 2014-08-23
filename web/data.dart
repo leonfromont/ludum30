@@ -83,7 +83,7 @@ dynamic _EnemyBulletTargeted(Rect v, Rect target) {
   Vector line = target.center - v.center;
   line.normalize();
   var e = new Entity({
-           Types.RENDER : new Render(SpriteSheet.bullet),
+           Types.RENDER : new Render(SpriteSheet.bulletenemy),
            Types.AABB : new Rect(v.left, v.top, 32, 32),
            Types.VELOCITY : line * 0.2,
            Types.COLLISION : new CollisionMask('enemybullet', ["player"])

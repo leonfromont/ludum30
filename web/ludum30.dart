@@ -116,7 +116,7 @@ class EnemyBullet extends Component {
   bool get canFire => cooldown <= 0.0;
 
   EnemyBullet(num dt, {aim : false}) {
-    this.cooldown = dt;
+    this.cooldown = dt * new Random().nextDouble();
     this.dt = dt;
     this.aim = aim;
   }
