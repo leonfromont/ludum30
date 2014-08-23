@@ -9,6 +9,7 @@ class Types {
   static int COLLISION = 5;
   static int AABB = 6;
   static int ENEMYBULLET = 7;
+  static int PLAYERHEALTH = 8;
 }
 
 
@@ -16,7 +17,9 @@ dynamic Player() {
   Entity e = new Entity({
           Types.RENDER : new Render(SpriteSheet.player),
           Types.AABB : new Rect(128, 128, 34, 68),
-          Types.PLAYERBULLET : new PlayerBullet(1000)
+          Types.PLAYERBULLET : new PlayerBullet(1000),
+          Types.COLLISION : new CollisionMask('player', ["enemybullet"]),
+          Types.PLAYERHEALTH : new PlayerHealth(10)
   });
   
   return e;
@@ -38,7 +41,7 @@ dynamic _EnemyBullet(Rect v) {
   var e = new Entity({
            Types.RENDER : new Render(new Rect(0, 0, 32, 32)),
            Types.AABB : v.clone(),
-           Types.VELOCITY : new Vector(-2, 0),
+           Types.VELOCITY : new Vector(-0.5, 0),
            Types.COLLISION : new CollisionMask('enemybullet', ["player"])
   });
 

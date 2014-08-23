@@ -14,7 +14,6 @@ class Entity {
 
   List comps = [];
 
-
   Entity(Map<int, dynamic> args) {
     nextId += 1;
     ID = nextId;
@@ -58,7 +57,7 @@ class Pair {
       return true;
     }
 
-    if(a == p.b && a == p.a) {
+    if(a == p.b && b == p.a) {
       return true;
     }
 
@@ -84,6 +83,16 @@ class Aspect {
 
 
 abstract class Component {}
+
+class PlayerHealth extends Component {
+  int max;
+  int current;
+
+  PlayerHealth(int max) {
+    this.max = max;
+    this.current = max;
+  }
+}
 
 class CollisionMask extends Component {
   String name;
@@ -173,13 +182,28 @@ class MyState extends State {
         if(c0.mask.contains(c1.name) &&
             c1.mask.contains(c0.name)) {
           if(e0[Types.AABB].collide(e1[Types.AABB])) {
-            pairs.add(new Pair(e0, e1));
+            Pair p = new Pair(e0, e1);
+            if(!pairs.contains(p)) {
+              pairs.add(new Pair(e0, e1));
+            }
           }
         }
       }
     }
 
     for(Pair p in pairs) {
+      if(p.a[Types.PLAYERHEALTH] != null) {
+        p.a[Types.PLAYERHEALTH].current -= 1;
+        entities.remove(p.b);
+        continue;
+      }
+
+      if(p.b[Types.PLAYERHEALTH] != null) {
+        p.b[Types.PLAYERHEALTH].current -= 1;
+        entities.remove(p.a);
+        continue;
+      }
+
       entities.remove(p.a);
       entities.remove(p.b);
     }
@@ -278,7 +302,8 @@ class MyState extends State {
     
     ctx.font="20px Georgia";
     ctx.fillStyle = '#00ff00';
-    ctx.fillText("ASD", 32, 32);
+    String text = player[Types.PLAYERHEALTH].current.toString();
+    ctx.fillText(text, 32, 32);
   }
 }
 
