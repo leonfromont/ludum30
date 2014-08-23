@@ -71,7 +71,8 @@ class MyState extends State {
     el.src = './spritesheet.png';
     var e = {
             Types.RENDER : new Render(SpriteSheet.player),
-            Types.POSITION : new Vector(0, 0)
+            Types.POSITION : new Vector(0, 0),
+            Types.PLAYERBULLET : new PlayerBullet(1000)
     };
 
     entities.add(e);
@@ -86,6 +87,8 @@ class MyState extends State {
         e[Types.POSITION] = e[Types.POSITION] + e[Types.VELOCITY] * dt;
       }
     }
+    
+    player[Types.PLAYERBULLET].cooldown -= dt;
     
     
     path.update(dt / 1000.0);
@@ -104,17 +107,21 @@ class MyState extends State {
     }
     
     if(parent.currentlyPressedKeys.contains(KeyCode.SPACE)) {
-      Vector v = player[Types.POSITION].clone();
-      
-      var e = {
-               Types.PLAYERBULLET :  new PlayerBullet(1.0),
-               Types.RENDER : new Render(new Rect(0, 0, 32, 32)),
-               Types.POSITION : v,
-               Types.VELOCITY : new Vector(2, 0)
+      var comp = player[Types.PLAYERBULLET];
+      if(comp.cooldown <= 0.0) {
+        comp.cooldown = comp.dt;
+        Vector v = player[Types.POSITION].clone();
+        
+        var e = {
+                 Types.PLAYERBULLET :  new PlayerBullet(1.0),
+                 Types.RENDER : new Render(new Rect(0, 0, 32, 32)),
+                 Types.POSITION : v,
+                 Types.VELOCITY : new Vector(2, 0)
 
-      };
-      
-      entities.add(e);
+        };
+        
+        entities.add(e);
+      }
     }
   }
   
