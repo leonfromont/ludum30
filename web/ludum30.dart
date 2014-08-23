@@ -465,8 +465,10 @@ class MyState extends State {
     } else if(STATE_CURRENT == STATE_TITLE) {
       ctx.font="20px Georgia";
       ctx.fillStyle = '#00ff00';
-      String text = 'INSERT NAME HERE';
+      String text = 'IUNIUS';
       ctx.fillText(text, 32, 32);
+      
+      ctx.fillText('press any key to start', 64, 64);
 
     }
   }
