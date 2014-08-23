@@ -187,6 +187,7 @@ class MyState extends State {
   static int STATE_GAMEPLAY = 0;
   static int STATE_GAMEOVER = 1;
   static int STATE_TITLE = 2;
+  static int STATE_WON = 3;
   static int STATE_CURRENT = STATE_TITLE;
 
   num totalTime = 0.0;
@@ -204,9 +205,9 @@ class MyState extends State {
   }
 
   void loadWorld() {
+    totalTime = 0.0;
     entities = [];
-    entities.add(Earth());
-    Entity e = Player();
+    entities.add(Earth()); Entity e = Player();
     entities.add(e);
     player = e;
     waves = makewaves();
@@ -224,6 +225,12 @@ class MyState extends State {
         loadWorld();
         STATE_CURRENT = STATE_GAMEPLAY;
       }
+    } if(STATE_CURRENT == STATE_WON) {
+      return;
+    }
+
+    if(totalTime > 25000) {
+      STATE_CURRENT = STATE_WON;
     }
 
     totalTime += dt;
@@ -382,7 +389,6 @@ class MyState extends State {
     if(STATE_CURRENT == STATE_GAMEPLAY) {
       
       Aspect render = new Aspect([Types.AABB, Types.RENDER]);
-      ctx.clearRect(0, 0, WIDTH, HEIGHT);
       ctx.fillStyle = '#452555';
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
@@ -461,16 +467,29 @@ class MyState extends State {
     } else if (STATE_CURRENT == STATE_GAMEOVER) {
       ctx.font="20px Georgia";
       ctx.fillStyle = '#00ff00';
-      String text = 'GAME OVER';
-      ctx.fillText(text, 32, 32);
+      ctx.fillText('GAME OVER', WIDTH / 2, HEIGHT / 2);
+      ctx.fillText('Press any key to restart', WIDTH / 2, HEIGHT / 2 + 32);
+
     } else if(STATE_CURRENT == STATE_TITLE) {
-      ctx.font="20px Georgia";
+      ctx.fillStyle = '#452555';
+      ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+      ctx.font="32px Georgia";
       ctx.fillStyle = '#00ff00';
       String text = 'IUNIUS';
       ctx.fillText(text, 32, 32);
       
-      ctx.fillText('press any key to start', 64, 64);
+      ctx.font="20px Georgia";
+      ctx.fillText('Press any key to start', 64, 64);
 
+    } else if(STATE_CURRENT == STATE_WON) {
+      ctx.fillStyle = '#452555';
+      ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+      ctx.font="20px Georgia";
+      ctx.fillStyle = '#00ff00';
+      String text = 'YOU HAVE MADE IT TO IUNIUS';
+      ctx.fillText(text, 32, 32);
     }
   }
 }
