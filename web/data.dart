@@ -14,6 +14,10 @@ class Types {
   static int FLICKER = 10;
 }
 
+class Constants {
+  static int FLICKER_FREQ = 10;
+  static int FLICKER_DURATION = 500;
+}
 
 dynamic Player() {
   Entity e = new Entity({
@@ -21,8 +25,7 @@ dynamic Player() {
           Types.AABB : new Rect(128, 128, 34, 68),
           Types.PLAYERBULLET : new PlayerBullet(1000),
           Types.COLLISION : new CollisionMask('player', ["enemybullet"]),
-          Types.PLAYERHEALTH : new PlayerHealth(3),
-          Types.FLICKER : new Flicker(10, 500)
+          Types.PLAYERHEALTH : new PlayerHealth(3)
   });
   
   return e;

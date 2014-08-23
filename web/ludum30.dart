@@ -44,6 +44,10 @@ class Entity {
   dynamic operator[](int index) {
     return comps[index];
   }
+
+  void operator[]=(int index, dynamic value) {
+    comps[index] = value;
+  }
 }
 
 class Pair {
@@ -284,7 +288,7 @@ class MyState extends State {
       if(flicker != null) {
         flicker.leftTicks -= 1;
         if(flicker.leftTicks <= 0) {
-          e.comps[Types.FLICKER] = null;
+          e[Types.FLICKER] = null;
         }
       }
     }
@@ -349,12 +353,14 @@ class MyState extends State {
 
       if(p.a[Types.PLAYERHEALTH] != null) {
         p.a[Types.PLAYERHEALTH].current -= 1;
+        p.a[Types.FLICKER] = new Flicker(Constants.FLICKER_FREQ, Constants.FLICKER_DURATION);
         entities.remove(p.b);
         continue;
       }
 
       if(p.b[Types.PLAYERHEALTH] != null) {
         p.b[Types.PLAYERHEALTH].current -= 1;
+        p.b[Types.FLICKER] = new Flicker(Constants.FLICKER_FREQ, Constants.FLICKER_DURATION);
         entities.remove(p.a);
         continue;
       }
@@ -478,10 +484,6 @@ class MyState extends State {
       
       for (var e in entities) {
         var flicker = e[Types.FLICKER];
-        if(flicker != null) {
-          flicker.leftTicks -= 1;
-
-        }
         if(flicker != null && flicker.off) {
           continue;
         }
