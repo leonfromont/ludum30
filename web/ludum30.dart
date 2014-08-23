@@ -149,6 +149,8 @@ class SpriteSheet {
   static Rect player = new Rect(0, 32, 64, 32);
   static Rect bullet = new Rect(0, 0, 32, 32);
   static Rect monster = new Rect(64, 0, 64, 64);
+  static Rect monsterpurple = new Rect(128, 0, 64, 64);
+  static Rect shell = new Rect(192, 0, 64, 32);
   static Rect Explosion = new Rect(0, 64, 64, 64);
   static Rect HeartEmpty = new Rect(64, 64, 32, 32);
   static Rect HeartFull = new Rect(96, 64, 32, 32);
@@ -205,7 +207,7 @@ class MyState extends State {
     Entity e = Player();
     entities.add(e);
     player = e;
-    waves = [wave1(), wave2(10000), wave2(30000)];
+    waves = makewaves();
   }
   
   void update(num dt) {
