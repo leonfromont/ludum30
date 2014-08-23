@@ -16,7 +16,7 @@ class Types {
 
 class Constants {
   static int FLICKER_FREQ = 10;
-  static int FLICKER_DURATION = 500;
+  static int FLICKER_DURATION = 180;
 }
 
 dynamic Player() {
