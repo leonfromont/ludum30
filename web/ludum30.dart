@@ -381,8 +381,15 @@ class MyState extends State {
     }
     
     speed.normalize();
-    
-    player[Types.AABB].topleft = player[Types.AABB].topleft + speed * p;
+
+    Rect aabb = player[Types.AABB];
+    var old = aabb.clone();
+    aabb.topleft = aabb.topleft + speed * p;
+
+    if(!new Rect(0, 64, WIDTH, HEIGHT).contains(aabb)) {
+      player.comps[Types.AABB] = old;
+    }
+
     
     if(parent.currentlyPressedKeys.contains(KeyCode.SPACE)) {
       var comp = player.comps[Types.PLAYERBULLET];
