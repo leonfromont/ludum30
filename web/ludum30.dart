@@ -91,6 +91,32 @@ class Aspect {
 
 abstract class Component {}
 
+class Flicker extends Component {
+  num freq;
+  num totalTicks;
+  num leftTicks;
+
+  Flicker(num freq, num totalTime) {
+    this.freq = freq;
+    this.totalTicks = totalTime;
+    leftTicks = totalTime;
+  }
+
+  bool get done => leftTicks <= 0;
+  bool get off {
+    num wrap = leftTicks % (2 * freq);
+    return wrap / freq >= 1.0;
+  }
+  // 0 = True
+  // 1 = True
+  // 2 = True
+  // 3 = False
+  // 4 = False
+  // 5 = False
+  // 6 = True
+
+}
+
 class PlayerHealth extends Component {
   int max;
   int current;
@@ -446,6 +472,14 @@ class MyState extends State {
       SpriteSheet.render(ctx, SpriteSheet.Background2, b, 480);
       
       for (var e in entities) {
+        var flicker = e[Types.FLICKER];
+        if(flicker != null) {
+          flicker.leftTicks -= 1;
+        }
+        if(flicker != null && flicker.off) {
+          continue;
+        }
+
         if (render.match(e)) {
           Render r = e.comps[Types.RENDER];
           ctx.drawImageScaledFromSource(el, 

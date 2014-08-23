@@ -3,12 +3,16 @@ boss?
 
 high score i.e. distance
 
-levels?
-
 chargers should go in random directions
-need a bit of random on cooldown times
 
 should be able to shoot chargers?
 
 cooldown when hit
 enemies shouldn't go off screen on path
+
+waves can have front and back wings
+waves should progressivley get harder
+
+get rid of wave indicators or have them as debug
+
+game over needs to be clearer

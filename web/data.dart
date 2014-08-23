@@ -11,6 +11,7 @@ class Types {
   static int ENEMYBULLET = 7;
   static int PLAYERHEALTH = 8;
   static int TIMED = 9;
+  static int FLICKER = 10;
 }
 
 
@@ -20,7 +21,8 @@ dynamic Player() {
           Types.AABB : new Rect(128, 128, 34, 68),
           Types.PLAYERBULLET : new PlayerBullet(1000),
           Types.COLLISION : new CollisionMask('player', ["enemybullet"]),
-          Types.PLAYERHEALTH : new PlayerHealth(3)
+          Types.PLAYERHEALTH : new PlayerHealth(3),
+          Types.FLICKER : new Flicker(10, 500)
   });
   
   return e;
