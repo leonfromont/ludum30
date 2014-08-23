@@ -52,7 +52,7 @@ dynamic _EnemyBullet(Rect v) {
   var e = new Entity({
            Types.RENDER : new Render(new Rect(0, 0, 32, 32)),
            Types.AABB : v.clone(),
-           Types.VELOCITY : new Vector(-0.1, 0),
+           Types.VELOCITY : new Vector(-0.2, 0),
            Types.COLLISION : new CollisionMask('enemybullet', ["player"])
   });
 
@@ -67,8 +67,8 @@ dynamic StraightEnemy(Vector origin) {
           Types.RENDER : new Render(SpriteSheet.monster),
           Types.AABB : new Rect(origin.x, origin.y, 68, 68),
           Types.COLLISION : new CollisionMask('enemy', ['playerbullet']),
-          Types.PATH : new Path([origin.clone(),  b], 1.0),
-          Types.ENEMYBULLET : new EnemyBullet(1000.0)
+          Types.PATH : new Path([origin.clone(),  b], 1.5),
+          Types.ENEMYBULLET : new EnemyBullet(3000.0)
   });
 
 
@@ -77,8 +77,7 @@ dynamic StraightEnemy(Vector origin) {
 
 Wave wave1() {
   var e1 = StraightEnemy(new Vector(400, 400));
-  var e2 = StraightEnemy(new Vector(400, 300));
   var e3 = StraightEnemy(new Vector(400, 200));
 
-  return new Wave(1.0, [e1, e2, e3]);
+  return new Wave(1.0, [e1, e3]);
 }
