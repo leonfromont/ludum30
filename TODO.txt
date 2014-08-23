@@ -1,9 +1,13 @@
-
-waves
-proper HUD for health
-game over and title screen
+title screen
+loading screen
 name
 
 destroy bullets when they're out of screen
+enemies that aim
+enemies that rush - need player enemy collisions
 
-background?
+explosions when player is hit
+high score i.e. distance
+
+levels?
+

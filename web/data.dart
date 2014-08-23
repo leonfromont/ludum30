@@ -40,8 +40,8 @@ dynamic _PlayerBullet(Rect v) {
   var e = new Entity({
            Types.PLAYERBULLET :  new PlayerBullet(1.0),
            Types.RENDER : new Render(new Rect(0, 0, 32, 32)),
-           Types.AABB : v,
-           Types.VELOCITY : new Vector(2, 0),
+           Types.AABB : new Rect(v.left, v.top, 32, 32),
+           Types.VELOCITY : new Vector(0.8, 0),
            Types.COLLISION : new CollisionMask('playerbullet', ["enemy"])
   });
   
@@ -51,8 +51,21 @@ dynamic _PlayerBullet(Rect v) {
 dynamic _EnemyBullet(Rect v) {
   var e = new Entity({
            Types.RENDER : new Render(new Rect(0, 0, 32, 32)),
-           Types.AABB : v.clone(),
+           Types.AABB : new Rect(v.left, v.top, 32, 32),
            Types.VELOCITY : new Vector(-0.2, 0),
+           Types.COLLISION : new CollisionMask('enemybullet', ["player"])
+  });
+
+  return e;
+}
+
+dynamic _EnemyBulletTargeted(Rect v, Rect target) {
+  Vector line = target.center - v.center;
+  line.normalize();
+  var e = new Entity({
+           Types.RENDER : new Render(new Rect(0, 0, 32, 32)),
+           Types.AABB : new Rect(v.left, v.top, 32, 32),
+           Types.VELOCITY : line * 0.2,
            Types.COLLISION : new CollisionMask('enemybullet', ["player"])
   });
 
@@ -68,7 +81,7 @@ dynamic StraightEnemy(Vector origin) {
           Types.AABB : new Rect(origin.x, origin.y, 68, 68),
           Types.COLLISION : new CollisionMask('enemy', ['playerbullet']),
           Types.PATH : new Path([origin.clone(),  b], 1.5),
-          Types.ENEMYBULLET : new EnemyBullet(3000.0)
+          Types.ENEMYBULLET : new EnemyBullet(3000.0, aim : true)
   });
 
 

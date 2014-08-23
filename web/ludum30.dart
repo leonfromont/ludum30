@@ -111,12 +111,14 @@ class CollisionMask extends Component {
 class EnemyBullet extends Component {
   num cooldown;
   num dt;
+  bool aim;
 
   bool get canFire => cooldown <= 0.0;
 
-  EnemyBullet(num dt) {
+  EnemyBullet(num dt, {aim : false}) {
     this.cooldown = dt;
     this.dt = dt;
+    this.aim = aim;
   }
 }
 
@@ -308,11 +310,20 @@ class MyState extends State {
 
     for(var e in entities) {
       if(e[Types.ENEMYBULLET] != null) {
-        e[Types.ENEMYBULLET].cooldown -= dt;
+        EnemyBullet eb = e[Types.ENEMYBULLET];
+        eb.cooldown -= dt;
         
-        if(e[Types.ENEMYBULLET].canFire) {
-          e[Types.ENEMYBULLET].cooldown = e[Types.ENEMYBULLET].dt;
-          var e1 = _EnemyBullet(e[Types.AABB]); 
+        if(eb.canFire) {
+          eb.cooldown = eb.dt;
+          
+          Entity e1;
+
+          if(!eb.aim) {
+            e1 = _EnemyBullet(e[Types.AABB]); 
+          } else {
+            e1 = _EnemyBulletTargeted(e[Types.AABB], player[Types.AABB]); 
+          }
+
           newones.add(e1);
         }
       }
