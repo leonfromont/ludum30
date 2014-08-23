@@ -124,6 +124,43 @@ dynamic AimEnemy(Vector origin) {
   return e;
 }
 
+class Rand {
+  Random impl;
+
+  Rand() {
+    impl = new Random();
+  }
+
+  int range(int min, int max) {
+    int abs = impl.nextInt(max - min);
+    return abs + min;
+  }
+
+  dynamic choice(List choices) {
+    int index = range(0, choices.length);
+    return choices[index];
+  }
+}
+
+// random waves
+// between 1 and 4 entities
+// and one of our 3
+Wave monkey(dt) {
+  var types = [Charger, AimEnemy, StraightEnemy];
+  var entities = [];
+  Rand r = new Rand();
+  int t = r.range(1, 6);
+  double height = 512.0 / t;
+  for(int i = 0; i < t; i++) {
+    double y = (height * i) + (height / 2);
+    var m = r.choice(types);
+    var e = m(new Vector(400, y.toInt()));
+    entities.add(e);
+  }
+
+  return new Wave(dt, entities);
+}
+
 Wave wave3(dt) {
   var e1 = Charger(new Vector(400, 400));
   var e3 = Charger(new Vector(400, 200));
@@ -148,6 +185,6 @@ Wave wave2(dt) {
 }
 
 List<Wave> makewaves() {
-    var waves = [wave1(), wave3(10000), wave2(20000)];
+    var waves = [monkey(2), wave3(10000), wave2(20000)];
     return waves;
 }
