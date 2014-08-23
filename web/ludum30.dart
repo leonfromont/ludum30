@@ -167,7 +167,7 @@ class MyState extends State {
       }
     }
 
-    Set<Pair> pairs;
+    Set<Pair> pairs = new Set<Pair>();
     Rect t0, t1;
 
     for(var e0 in collidables) {
@@ -177,11 +177,17 @@ class MyState extends State {
         
         if(c0.mask.contains(c1.name) &&
             c1.mask.contains(c0.name)) {
-
-          // how do we collide the rects? unless we just throw away position?
-          //t0 = new Rect(e0.comps[Types.POSITION]
+          if(e0[Types.AABB].collide(e1[Types.AABB])) {
+            print('collision!');
+            pairs.add(new Pair(e0, e1));
+          }
         }
       }
+    }
+
+    for(Pair p in pairs) {
+      entities.remove(p.a);
+      entities.remove(p.b);
     }
 
 
