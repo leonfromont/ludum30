@@ -7,7 +7,6 @@ chargers should go in random directions
 
 should be able to shoot chargers?
 
-cooldown when hit
 enemies shouldn't go off screen on path
 
 waves can have front and back wings

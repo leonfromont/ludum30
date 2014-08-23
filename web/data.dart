@@ -17,6 +17,7 @@ class Types {
 class Constants {
   static int FLICKER_FREQ = 10;
   static int FLICKER_DURATION = 180;
+  static int PATH_HEIGHT = 30;
 }
 
 dynamic Player() {
@@ -99,11 +100,11 @@ dynamic _EnemyBulletTargeted(Rect v, Rect target) {
 
 dynamic StraightEnemy(Vector origin) {
   var b = origin.clone();
-  b.y -= 100;
+  b.y -= Constants.PATH_HEIGHT;
   
   var e = new Entity({
           Types.RENDER : new Render(SpriteSheet.monster),
-          Types.AABB : new Rect(origin.x, origin.y, 68, 68),
+          Types.AABB : new Rect(origin.x, origin.y, 64, 64),
           Types.COLLISION : new CollisionMask('enemy', ['playerbullet']),
           Types.PATH : new Path([origin.clone(),  b], 1.5),
           Types.ENEMYBULLET : new EnemyBullet(1500.0)
@@ -114,11 +115,11 @@ dynamic StraightEnemy(Vector origin) {
 
 dynamic AimEnemy(Vector origin) {
   var b = origin.clone();
-  b.y -= 50;
+  b.y -= Constants.PATH_HEIGHT;
   
   var e = new Entity({
           Types.RENDER : new Render(SpriteSheet.monsterpurple),
-          Types.AABB : new Rect(origin.x, origin.y, 68, 68),
+          Types.AABB : new Rect(origin.x, origin.y, 64, 64),
           Types.COLLISION : new CollisionMask('enemy', ['playerbullet']),
           Types.PATH : new Path([origin.clone(),  b], 1.5),
           Types.ENEMYBULLET : new EnemyBullet(1500.0, aim : true)
@@ -147,24 +148,6 @@ class Rand {
   }
 }
 
-// random waves
-// between 1 and 4 entities
-// and one of our 3
-Wave monkey(dt) {
-  var types = [Charger, AimEnemy, StraightEnemy];
-  var entities = [];
-  Rand r = new Rand();
-  int t = r.range(1, 6);
-  double height = 512.0 / t;
-  for(int i = 0; i < t; i++) {
-    double y = (height * i) + (height / 2);
-    var m = r.choice(types);
-    var e = m(new Vector(400, y.toInt()));
-    entities.add(e);
-  }
-
-  return new Wave(dt, entities);
-}
 
 Wave wave3(dt) {
   var e1 = Charger(new Vector(400, 400));
@@ -189,11 +172,73 @@ Wave wave2(dt) {
   return new Wave(dt, [e1, e2, e3]);
 }
 
+class WaveGenerator {
+
+  Rand r = new Rand();
+
+  Wave gen(dt) {
+    var types = [Charger, AimEnemy, StraightEnemy];
+
+    List<Entity> ents = [];
+    List<Vector> pos = positions();
+    for(Vector v in pos) {
+      var m = r.choice(types);
+      ents.add(StraightEnemy(v));
+    }
+
+    return new Wave(dt, ents);
+  }
+
+  List<int> ypositions(int n) {
+    List<int> results = [];
+    double height = (512.0 - 64.0) / n;
+    for(int i = 0; i < n; i++) {
+      double y = (height * i) + (height / 2);
+      results.add(64.0 + y.toInt());
+    }
+
+    return results;
+  }
+
+  // generate positions on our wave grid
+  List<Vector> positions() {
+    var results = [];
+    int t = r.range(7, 9);
+
+    // now... max we can have in back wave is 5
+    // anymore we jam in the front wave
+    int backwave = t;
+    if(t > 5) {
+      backwave = 5;
+    }
+
+    var ys = ypositions(backwave);
+    for(var y in ys) {
+      var e = new Vector(400, y);
+      results.add(e);
+    }
+
+    // then the rest we put in front
+    int frontwave = 0;
+    if(t > 5) {
+      frontwave = t - 5;
+    }
+
+    ys = ypositions(frontwave);
+    for(var y in ys) {
+      var e = new Vector(300, y);
+      results.add(e);
+    }
+
+    return results;
+  }
+}
+
 List<Wave> makewaves() {
+    WaveGenerator gen = new WaveGenerator();
     var waves = [];
     for(int i = 0; i < 20; i++) {
-      waves.add(monkey(i * 5000));
+      waves.add(gen.gen(i * 5000));
     }
-    //var waves = [monkey(2), wave3(10000), wave2(20000)];
     return waves;
 }
