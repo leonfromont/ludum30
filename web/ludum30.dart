@@ -138,10 +138,16 @@ class Render extends Component {
   Render(this.spritesheet);
 }
 
+class Timed extends Component {
+  num dt;
+  Timed(this.dt);
+}
+
 class SpriteSheet {
-  static Rect player = new Rect(0, 34, 68, 34);
-  static Rect bullet = new Rect(0, 0, 34, 34);
-  static Rect monster = new Rect(68, 0, 68, 68);
+  static Rect player = new Rect(0, 32, 64, 32);
+  static Rect bullet = new Rect(0, 0, 32, 32);
+  static Rect monster = new Rect(64, 0, 64, 64);
+  static Rect Explosion = new Rect(0, 64, 64, 64);
 }
 
 
@@ -153,6 +159,11 @@ class MyState extends State {
   static int WIDTH = 512;
   static int HEIGHT = 512;
 
+
+  static int STATE_GAMEPLAY = 0;
+  static int STATE_GAMEOVER = 1;
+  static int STATE_CURRENT = STATE_GAMEPLAY;
+
   num totalTime = 0.0;
 
   static int PLAY = 0;
@@ -163,31 +174,50 @@ class MyState extends State {
   List<Entity> entities = [];
   var player = null;
   
-  Rect a = new Rect(0, 0, 32, 32);
-  Rect b = new Rect(64, 0, 32, 32);
-  
-  Path path = new Path.once(
-            [new Vector(0, 44),  new Vector(0, 128)],
-            3.0);
-  
   MyState() {
     el.src = './spritesheet.png';
-    Entity e = Player();
+    loadWorld();
+  }
 
+  void loadWorld() {
+    entities = [];
+    Entity e = Player();
     entities.add(e);
     player = e;
-
-
     waves.add(wave1());
   }
   
-  void update (num dt) {
+  void update(num dt) {
+
+    if(STATE_CURRENT == STATE_GAMEOVER) {
+      if(parent.currentlyPressedKeys.length > 0) {
+        loadWorld();
+        STATE_CURRENT = STATE_GAMEPLAY;
+      }
+    }
+
     totalTime += dt;
     for(Wave wave in waves) {
       if(!wave.spawned && wave.dt < totalTime) {
         entities.addAll(wave.entities);
         wave.spawned = true;
       }
+    }
+
+
+    List<Entity> removed = [];
+    for(var e in entities) {
+      if(e[Types.TIMED] != null) {
+        Timed t = e[Types.TIMED];
+        t.dt -= dt;
+        if(t.dt < 0.0) {
+          removed.add(e);
+        }
+      }
+    }
+    
+    for(var e in removed) {
+      entities.remove(e);
     }
 
     
@@ -233,6 +263,8 @@ class MyState extends State {
 
       entities.remove(p.a);
       entities.remove(p.b);
+      var e = Explosion(p.a[Types.AABB].topleft);
+      entities.add(e);
     }
 
 
@@ -271,8 +303,9 @@ class MyState extends State {
     
     player.comps[Types.PLAYERBULLET].cooldown -= dt;
     
-    
-    path.update(dt / 1000.0);
+    if(player[Types.PLAYERHEALTH].current <= 0) {
+      STATE_CURRENT = STATE_GAMEOVER;
+    }
     
     Vector speed = new Vector(0, 0);
     num p = 7.0;
@@ -307,32 +340,41 @@ class MyState extends State {
   }
   
   void render(CanvasRenderingContext2D ctx) {
-    Aspect render = new Aspect([Types.AABB, Types.RENDER]);
-    ctx.clearRect(0, 0, WIDTH, HEIGHT);
-    ctx.fillStyle = '#452555';
-    ctx.fillRect(0, 0, WIDTH, HEIGHT);
-    
-    for (var e in entities) {
-      if (render.match(e)) {
-        Render r = e.comps[Types.RENDER];
-        ctx.drawImageScaledFromSource(el, 
-            r.spritesheet.left, 
-            r.spritesheet.top, 
-            r.spritesheet.width, 
-            r.spritesheet.height, 
-            e.comps[Types.AABB].left, 
-            e.comps[Types.AABB].top, 
-            r.spritesheet.width, 
-            r.spritesheet.height);
+    if(STATE_CURRENT == STATE_GAMEPLAY) {
+      
+      Aspect render = new Aspect([Types.AABB, Types.RENDER]);
+      ctx.clearRect(0, 0, WIDTH, HEIGHT);
+      ctx.fillStyle = '#452555';
+      ctx.fillRect(0, 0, WIDTH, HEIGHT);
+      
+      
+      for (var e in entities) {
+        if (render.match(e)) {
+          Render r = e.comps[Types.RENDER];
+          ctx.drawImageScaledFromSource(el, 
+              r.spritesheet.left, 
+              r.spritesheet.top, 
+              r.spritesheet.width, 
+              r.spritesheet.height, 
+              e.comps[Types.AABB].left, 
+              e.comps[Types.AABB].top, 
+              r.spritesheet.width, 
+              r.spritesheet.height);
+        }
       }
+      
+      
+      
+      ctx.font="20px Georgia";
+      ctx.fillStyle = '#00ff00';
+      String text = player[Types.PLAYERHEALTH].current.toString();
+      ctx.fillText(text, 32, 32);
+    } else if (STATE_CURRENT == STATE_GAMEOVER) {
+      ctx.font="20px Georgia";
+      ctx.fillStyle = '#00ff00';
+      String text = 'GAME OVER';
+      ctx.fillText(text, 32, 32);
     }
-    
-    
-    
-    ctx.font="20px Georgia";
-    ctx.fillStyle = '#00ff00';
-    String text = player[Types.PLAYERHEALTH].current.toString();
-    ctx.fillText(text, 32, 32);
   }
 }
 

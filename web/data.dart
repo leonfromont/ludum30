@@ -10,6 +10,7 @@ class Types {
   static int AABB = 6;
   static int ENEMYBULLET = 7;
   static int PLAYERHEALTH = 8;
+  static int TIMED = 9;
 }
 
 
@@ -19,7 +20,17 @@ dynamic Player() {
           Types.AABB : new Rect(128, 128, 34, 68),
           Types.PLAYERBULLET : new PlayerBullet(1000),
           Types.COLLISION : new CollisionMask('player', ["enemybullet"]),
-          Types.PLAYERHEALTH : new PlayerHealth(10)
+          Types.PLAYERHEALTH : new PlayerHealth(3)
+  });
+  
+  return e;
+}
+
+dynamic Explosion(Vector v) {
+  var e = new Entity({
+           Types.RENDER : new Render(SpriteSheet.Explosion),
+           Types.AABB : new Rect(v.x, v.y, 64, 64),
+           Types.TIMED : new Timed(250)
   });
   
   return e;
@@ -41,7 +52,7 @@ dynamic _EnemyBullet(Rect v) {
   var e = new Entity({
            Types.RENDER : new Render(new Rect(0, 0, 32, 32)),
            Types.AABB : v.clone(),
-           Types.VELOCITY : new Vector(-0.5, 0),
+           Types.VELOCITY : new Vector(-0.1, 0),
            Types.COLLISION : new CollisionMask('enemybullet', ["player"])
   });
 
