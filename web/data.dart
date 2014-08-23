@@ -36,6 +36,15 @@ dynamic Explosion(Vector v) {
   return e;
 }
 
+dynamic Earth() {
+  var e = new Entity({
+           Types.RENDER : new Render(SpriteSheet.Earth),
+           Types.AABB : new Rect(300, 32, 128, 128)
+  });
+  
+  return e;
+}
+
 dynamic _PlayerBullet(Rect v) {
   var e = new Entity({
            Types.PLAYERBULLET :  new PlayerBullet(1.0),

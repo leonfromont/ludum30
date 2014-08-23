@@ -156,6 +156,7 @@ class SpriteSheet {
   static Rect HeartFull = new Rect(96, 64, 32, 32);
   static Rect Background1 = new Rect(0, 480, 512, 32);
   static Rect Background2 = new Rect(0, 448, 512, 32);
+  static Rect Earth = new Rect(128, 64, 128, 128);
 
   static render(CanvasRenderingContext2D ctx, Rect r, int x, int y) {
           ctx.drawImageScaledFromSource(el, 
@@ -197,7 +198,6 @@ class MyState extends State {
 
   List<Entity> entities = [];
   var player = null;
-  
   MyState() {
     el.src = './spritesheet.png';
     loadWorld();
@@ -205,6 +205,7 @@ class MyState extends State {
 
   void loadWorld() {
     entities = [];
+    entities.add(Earth());
     Entity e = Player();
     entities.add(e);
     player = e;
