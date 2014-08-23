@@ -48,7 +48,7 @@ dynamic Earth() {
 dynamic _PlayerBullet(Rect v) {
   var e = new Entity({
            Types.PLAYERBULLET :  new PlayerBullet(1.0),
-           Types.RENDER : new Render(new Rect(0, 0, 32, 32)),
+           Types.RENDER : new Render(SpriteSheet.bulletplayer),
            Types.AABB : new Rect(v.left, v.top, 32, 32),
            Types.VELOCITY : new Vector(0.8, 0),
            Types.COLLISION : new CollisionMask('playerbullet', ["enemy"])
@@ -70,7 +70,7 @@ dynamic Charger(Vector pos) {
 
 dynamic _EnemyBullet(Rect v) {
   var e = new Entity({
-           Types.RENDER : new Render(SpriteSheet.bullet),
+           Types.RENDER : new Render(SpriteSheet.bulletenemy),
            Types.AABB : new Rect(v.left, v.top, 32, 32),
            Types.VELOCITY : new Vector(-0.2, 0),
            Types.COLLISION : new CollisionMask('enemybullet', ["player"])

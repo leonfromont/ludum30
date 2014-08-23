@@ -1,13 +1,8 @@
-title screen
 loading screen
-world at end
 boss?
-name
 
 destroy bullets when they're out of screen
-enemies that rush - need player enemy collisions
 
-explosions when player is hit
 high score i.e. distance
 
 levels?

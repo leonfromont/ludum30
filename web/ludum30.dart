@@ -147,7 +147,8 @@ class Timed extends Component {
 
 class SpriteSheet {
   static Rect player = new Rect(0, 32, 64, 32);
-  static Rect bullet = new Rect(0, 0, 32, 32);
+  static Rect bulletenemy = new Rect(0, 0, 32, 32);
+  static Rect bulletplayer = new Rect(32, 0, 32, 32);
   static Rect monster = new Rect(64, 0, 64, 64);
   static Rect monsterpurple = new Rect(128, 0, 64, 64);
   static Rect shell = new Rect(192, 0, 64, 32);
