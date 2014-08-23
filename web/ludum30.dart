@@ -1,6 +1,8 @@
 import 'dart:html';
 import 'package:ad/ad.dart';
 
+
+
 class Entity {
   static int nextId = 0;
   int ID;
@@ -16,6 +18,46 @@ class Entity {
     for(int s in args.keys) {
       comps[s] = args[s];
     }
+  }
+  
+  int get hashCode {
+    return ID;
+  }
+  
+  bool operator==(other) {
+    if (other is! Entity) return false;
+    Entity e = other;
+    return (ID == e.ID);
+  }
+  
+  dynamic operator[](int index) {
+    return comps[index];
+  }
+}
+
+class Pair {
+  Entity a;
+  Entity b;
+
+  Pair(this.a, this.b);
+
+  int get hashCode {
+    return a.ID ^ b.ID;
+  }
+  
+  bool operator==(other) {
+    if (other is! Pair) return false;
+    Pair p = other;
+
+    if(a == p.a && b == p.b) {
+      return true;
+    }
+
+    if(a == p.b && a == p.a) {
+      return true;
+    }
+
+    return false; 
   }
 }
 
@@ -38,10 +80,11 @@ class Aspect {
 class Types {
   static int PLAYERBULLET = 0;
   static int RENDER = 1;
-  static int POSITION = 2;
+  //static int POSITION = 2;
   static int PATH = 3;
   static int VELOCITY = 4;
   static int COLLISION = 5;
+  static int AABB = 6;
 }
 
 abstract class Component {}
@@ -80,7 +123,7 @@ class SpriteSheet {
 dynamic StraightEnemy() {
   var e = new Entity({
           Types.RENDER : new Render(SpriteSheet.monster),
-          Types.POSITION : new Vector(400, 128),
+          Types.AABB : new Rect(400, 128, 68, 68),
           Types.COLLISION : new CollisionMask('enemy', ['playerbullet'])
   });
 
@@ -106,7 +149,7 @@ class MyState extends State {
     el.src = './spritesheet.png';
     Entity e = new Entity({
             Types.RENDER : new Render(SpriteSheet.player),
-            Types.POSITION : new Vector(128, 128),
+            Types.AABB : new Rect(128, 128, 34, 68),
             Types.PLAYERBULLET : new PlayerBullet(1000)
     });
 
@@ -124,6 +167,9 @@ class MyState extends State {
       }
     }
 
+    Set<Pair> pairs;
+    Rect t0, t1;
+
     for(var e0 in collidables) {
       for(var e1 in collidables) {
         CollisionMask c0 = e0.comps[Types.COLLISION];
@@ -131,17 +177,20 @@ class MyState extends State {
         
         if(c0.mask.contains(c1.name) &&
             c1.mask.contains(c0.name)) {
-          print('tag!');
+
+          // how do we collide the rects? unless we just throw away position?
+          //t0 = new Rect(e0.comps[Types.POSITION]
         }
       }
     }
 
 
-    Aspect physics = new Aspect([Types.POSITION, Types.VELOCITY]);
+    Aspect physics = new Aspect([Types.AABB, Types.VELOCITY]);
     
     for(var e in entities) {
     if(physics.match(e)) {
-        e.comps[Types.POSITION] = e.comps[Types.POSITION] + e.comps[Types.VELOCITY] * dt;
+        Rect aabb = e[Types.AABB];
+        aabb.topleft = aabb.topleft + e[Types.VELOCITY] * dt;
       }
     }
     
@@ -168,19 +217,18 @@ class MyState extends State {
     
     speed.normalize();
     
-    
-    player.comps[Types.POSITION] = player.comps[Types.POSITION] + speed * p;
+    player[Types.AABB].topleft = player[Types.AABB].topleft + speed * p;
     
     if(parent.currentlyPressedKeys.contains(KeyCode.SPACE)) {
       var comp = player.comps[Types.PLAYERBULLET];
       if(comp.cooldown <= 0.0) {
         comp.cooldown = comp.dt;
-        Vector v = player.comps[Types.POSITION].clone();
+        Rect v = player[Types.AABB].clone();
         
         var e = new Entity({
                  Types.PLAYERBULLET :  new PlayerBullet(1.0),
                  Types.RENDER : new Render(new Rect(0, 0, 32, 32)),
-                 Types.POSITION : v,
+                 Types.AABB : v,
                  Types.VELOCITY : new Vector(2, 0),
                  Types.COLLISION : new CollisionMask('playerbullet', ["enemy"])
         });
@@ -191,7 +239,7 @@ class MyState extends State {
   }
   
   void render(CanvasRenderingContext2D ctx) {
-    Aspect render = new Aspect([Types.POSITION, Types.RENDER]);
+    Aspect render = new Aspect([Types.AABB, Types.RENDER]);
     ctx.clearRect(0, 0, 512, 512);
     
     for (var e in entities) {
@@ -202,8 +250,8 @@ class MyState extends State {
             r.spritesheet.top, 
             r.spritesheet.width, 
             r.spritesheet.height, 
-            e.comps[Types.POSITION].x, 
-            e.comps[Types.POSITION].y, 
+            e.comps[Types.AABB].left, 
+            e.comps[Types.AABB].top, 
             r.spritesheet.width, 
             r.spritesheet.height);
       }
