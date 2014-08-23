@@ -7,11 +7,8 @@ chargers should go in random directions
 
 should be able to shoot chargers?
 
-enemies shouldn't go off screen on path
-
-waves can have front and back wings
-waves should progressivley get harder
-
 get rid of wave indicators or have them as debug
 
 game over needs to be clearer
+
+check hitboxes!!!

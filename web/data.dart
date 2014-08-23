@@ -186,22 +186,56 @@ class WaveTemplate {
   }
 }
 
+
+class Range {
+  int min;
+  int max;
+  
+  Range(this.min, this.max);
+}
+
 class WaveGenerator {
 
   Rand r = new Rand();
 
-  Wave gen(dt) {
-    // if we are even do half the wave then flip it
-    // if we are odd...
-    // center can we do whatever
-    // still need to do either side
+  Wave gen(num dt, int difficulty) {
+    // how do we scale difficulty
+    // variation in monsters
+    // number of monsters
 
+    // max monsters is 7.
+    // range 1,7 from 20?
+    var d = {
+            0 : new Range(1, 2),
+            1 : new Range(2, 3),
+            2 : new Range(2, 3),
+            3 : new Range(2, 3),
+            4 : new Range(2, 4),
+            5 : new Range(2, 4),
+            6 : new Range(3, 5),
+            7 : new Range(3, 5),
+            8 : new Range(3, 5),
+            9 : new Range(3, 5),
+            10 : new Range(3, 6),
+            11 : new Range(3, 6),
+            12 : new Range(3, 6),
+            13 : new Range(4, 7),
+            14 : new Range(4, 7),
+            15 : new Range(4, 7),
+            16 : new Range(5, 7),
+            17 : new Range(5, 7),
+            18 : new Range(5, 7),
+            19 : new Range(5, 7),
+            20 : new Range(5, 7),
+            21 : new Range(6, 8),
+    };
 
 
     var types = [Charger, AimEnemy, StraightEnemy];
 
     List<Entity> ents = [];
-    WaveTemplate template = positions();
+    Range df = d[difficulty];
+    WaveTemplate template = positions(df.min, df.max);
     List<Vector> pos = template.all();
 
     // back!!!
@@ -262,10 +296,10 @@ class WaveGenerator {
   }
 
   // generate positions on our wave grid
-  WaveTemplate positions() {
+  WaveTemplate positions(int min, int max) {
 
     int overflow = 5;
-    int t = r.range(7, 9);
+    int t = r.range(min, max);
 
     // now... max we can have in back wave is 5
     // anymore we jam in the front wave
@@ -302,7 +336,7 @@ List<Wave> makewaves() {
     WaveGenerator gen = new WaveGenerator();
     var waves = [];
     for(int i = 0; i < 20; i++) {
-      waves.add(gen.gen(i * 5000));
+      waves.add(gen.gen(i * 5000, i));
     }
     return waves;
 }
