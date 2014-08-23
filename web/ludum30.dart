@@ -190,6 +190,9 @@ class MyState extends State {
   static int STATE_WON = 3;
   static int STATE_CURRENT = STATE_TITLE;
 
+  static int maxkeycooldown = 180;
+  int keycooldown = maxkeycooldown;
+
   num totalTime = 0.0;
 
   static int PLAY = 0;
@@ -216,7 +219,13 @@ class MyState extends State {
   void update(num dt) {
 
     if(STATE_CURRENT == STATE_GAMEOVER) {
+      keycooldown -= 1;
+      if(keycooldown > 0) {
+        return;
+      }
+
       if(parent.currentlyPressedKeys.length > 0) {
+        keycooldown = maxkeycooldown;
         loadWorld();
         STATE_CURRENT = STATE_GAMEPLAY;
       }
