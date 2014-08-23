@@ -236,7 +236,7 @@ class MyState extends State {
   List<Entity> entities = [];
   var player = null;
   MyState() {
-    el.src = './spritesheet.png';
+    el.src = './spritesheet2.png';
     loadWorld();
   }
 
