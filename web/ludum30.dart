@@ -85,6 +85,7 @@ class Types {
   static int VELOCITY = 4;
   static int COLLISION = 5;
   static int AABB = 6;
+  static int ENEMYBULLET = 7;
 }
 
 abstract class Component {}
@@ -94,6 +95,18 @@ class CollisionMask extends Component {
   List<String> mask;
 
   CollisionMask(this.name, this.mask);
+}
+
+class EnemyBullet extends Component {
+  num cooldown;
+  num dt;
+
+  bool get canFire => cooldown <= 0.0;
+
+  EnemyBullet(num dt) {
+    this.cooldown = dt;
+    this.dt = dt;
+  }
 }
 
 class PlayerBullet extends Component {
@@ -120,11 +133,24 @@ class SpriteSheet {
   static Rect monster = new Rect(68, 0, 68, 68);
 }
 
+dynamic _EnemyBullet(Rect v) {
+  var e = new Entity({
+           Types.RENDER : new Render(new Rect(0, 0, 32, 32)),
+           Types.AABB : v.clone(),
+           Types.VELOCITY : new Vector(-2, 0),
+           Types.COLLISION : new CollisionMask('enemybullet', ["player"])
+  });
+
+  return e;
+}
+
 dynamic StraightEnemy() {
   var e = new Entity({
           Types.RENDER : new Render(SpriteSheet.monster),
           Types.AABB : new Rect(400, 128, 68, 68),
-          Types.COLLISION : new CollisionMask('enemy', ['playerbullet'])
+          Types.COLLISION : new CollisionMask('enemy', ['playerbullet']),
+          Types.PATH : new Path([new Vector(400, 44),  new Vector(400, 128)], 1.0),
+          Types.ENEMYBULLET : new EnemyBullet(1000.0)
   });
 
 
@@ -178,7 +204,6 @@ class MyState extends State {
         if(c0.mask.contains(c1.name) &&
             c1.mask.contains(c0.name)) {
           if(e0[Types.AABB].collide(e1[Types.AABB])) {
-            print('collision!');
             pairs.add(new Pair(e0, e1));
           }
         }
@@ -199,6 +224,30 @@ class MyState extends State {
         aabb.topleft = aabb.topleft + e[Types.VELOCITY] * dt;
       }
     }
+
+    for(var e in entities) {
+      if(e[Types.PATH] != null) {
+        e[Types.PATH].update(dt / 1000.0);
+        
+        e[Types.AABB].topleft = e[Types.PATH].currentPoint();
+      }
+    }
+    
+    List<Entity> newones = [];
+
+    for(var e in entities) {
+      if(e[Types.ENEMYBULLET] != null) {
+        e[Types.ENEMYBULLET].cooldown -= dt;
+        
+        if(e[Types.ENEMYBULLET].canFire) {
+          e[Types.ENEMYBULLET].cooldown = e[Types.ENEMYBULLET].dt;
+          var e1 = _EnemyBullet(e[Types.AABB]); 
+          newones.add(e1);
+        }
+      }
+    }
+    
+    entities.addAll(newones);
     
     player.comps[Types.PLAYERBULLET].cooldown -= dt;
     
@@ -265,30 +314,9 @@ class MyState extends State {
     
     
     
-    ctx.fillStyle = '#ff0000';
-    ctx.fillRect(a.left, a.top, a.right, a.bottom);
-
-    ctx.fillStyle = '#ff0000';
-    ctx.fillRect(b.left, b.top, b.width, b.height);
-    
-    var pos = path.currentPoint();
-    ctx.fillStyle = '#00ff00';
-    ctx.fillRect(pos.x.toInt(), pos.y.toInt(), 8, 8);
-    
-    ctx.fillRect(path.a.x, path.a.y, 4, 4);
-    ctx.fillRect(path.b.x, path.b.y, 4, 4);
-    
-    //ctx.drawImage(el, 0, 0);
-    
-    
     ctx.font="20px Georgia";
     ctx.fillStyle = '#00ff00';
-    //ctx.fillText("ASD", 32, 32);
-    if(a.collide(b)) {
-      ctx.fillText("YES", 32, 32);
-    } else {
-      ctx.fillText("NO", 32, 32);
-    }
+    ctx.fillText("ASD", 32, 32);
   }
 }
 

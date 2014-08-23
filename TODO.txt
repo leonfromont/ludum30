@@ -1,0 +1,8 @@
+make player get hit
+
+one hit die?
+nah have a health bar
+
+make enemies shoot
+first just straight
+then at player
