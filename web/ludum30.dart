@@ -376,14 +376,13 @@ class MyState extends State {
               r.spritesheet.height);
         }
       }
-      
-      
+
       // HUD 
       ctx.fillStyle = '#000000';
-      ctx.fillRect(0, 0, 512, 64);
-      int hudtop = 300;
+      ctx.fillRect(0, 0, 512, 72);
+      int hudtop = 364;
       int hudwidth = 36;
-      int hudpad = 16;
+      int hudpad = 20;
 
 
       for(int i = 0; i < 3; i++) {
