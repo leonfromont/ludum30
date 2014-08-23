@@ -1,10 +1,28 @@
 import 'dart:html';
 import 'package:ad/ad.dart';
 
+class Aspect {
+  List<int> types;
+
+  Aspect(this.types);
+
+  bool match(var e) {
+    for(var t in types) {
+      if(e[t] == null) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+}
+
 class Types {
   static int PLAYERBULLET = 0;
   static int RENDER = 1;
   static int POSITION = 2;
+  static int PATH = 3;
+  static int VELOCITY = 4;
 }
 
 abstract class Component {
@@ -61,6 +79,14 @@ class MyState extends State {
   }
   
   void update (num dt) {
+    Aspect physics = new Aspect([Types.POSITION, Types.VELOCITY]);
+    
+    for(var e in entities) {
+    if(physics.match(e)) {
+        e[Types.POSITION] = e[Types.POSITION] + e[Types.VELOCITY] * dt;
+      }
+    }
+    
     
     path.update(dt / 1000.0);
     
@@ -78,10 +104,14 @@ class MyState extends State {
     }
     
     if(parent.currentlyPressedKeys.contains(KeyCode.SPACE)) {
+      Vector v = player[Types.POSITION].clone();
+      
       var e = {
                Types.PLAYERBULLET :  new PlayerBullet(1.0),
                Types.RENDER : new Render(new Rect(0, 0, 32, 32)),
-               Types.POSITION : new Vector(128, 128)
+               Types.POSITION : v,
+               Types.VELOCITY : new Vector(2, 0)
+
       };
       
       entities.add(e);
@@ -89,10 +119,11 @@ class MyState extends State {
   }
   
   void render(CanvasRenderingContext2D ctx) {
-    ctx.clearRect(0, 0, 512, 256);
+    Aspect render = new Aspect([Types.POSITION, Types.RENDER]);
+    ctx.clearRect(0, 0, 512, 512);
     
     for (var e in entities) {
-      if (e[Types.RENDER] != null && e[Types.POSITION] != null) {
+      if (render.match(e)) {
         Render r = e[Types.RENDER];
         ctx.drawImageScaledFromSource(el, 
             r.spritesheet.left, 
