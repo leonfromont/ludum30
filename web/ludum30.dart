@@ -185,7 +185,8 @@ class MyState extends State {
 
   static int STATE_GAMEPLAY = 0;
   static int STATE_GAMEOVER = 1;
-  static int STATE_CURRENT = STATE_GAMEPLAY;
+  static int STATE_TITLE = 2;
+  static int STATE_CURRENT = STATE_TITLE;
 
   num totalTime = 0.0;
 
@@ -213,6 +214,11 @@ class MyState extends State {
   void update(num dt) {
 
     if(STATE_CURRENT == STATE_GAMEOVER) {
+      if(parent.currentlyPressedKeys.length > 0) {
+        loadWorld();
+        STATE_CURRENT = STATE_GAMEPLAY;
+      }
+    } else if(STATE_CURRENT == STATE_TITLE) {
       if(parent.currentlyPressedKeys.length > 0) {
         loadWorld();
         STATE_CURRENT = STATE_GAMEPLAY;
@@ -450,11 +456,18 @@ class MyState extends State {
       ctx.fillStyle = '#00ff00';
       ctx.fillRect(horizontalpad + (totalTime / 1000).toInt(), top + padding, 4, height);
 
+      // need to debounce both of these states
     } else if (STATE_CURRENT == STATE_GAMEOVER) {
       ctx.font="20px Georgia";
       ctx.fillStyle = '#00ff00';
       String text = 'GAME OVER';
       ctx.fillText(text, 32, 32);
+    } else if(STATE_CURRENT == STATE_TITLE) {
+      ctx.font="20px Georgia";
+      ctx.fillStyle = '#00ff00';
+      String text = 'INSERT NAME HERE';
+      ctx.fillText(text, 32, 32);
+
     }
   }
 }
