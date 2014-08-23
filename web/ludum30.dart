@@ -367,17 +367,17 @@ class MyState extends State {
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
 
-      a += 1;
+      a -= 1;
       //ctx.drawImage(bg, a, 0);
       SpriteSheet.render(ctx, SpriteSheet.Background1, a, 480);
 
-      if(a > WIDTH) {
-        a = -WIDTH;
+      if(a < -WIDTH) {
+        a = WIDTH;
       }
 
-      b += 1;
-      if(b > WIDTH) {
-        b = -WIDTH;
+      b -= 1;
+      if(b < -WIDTH) {
+        b = WIDTH;
       }
 
       
