@@ -278,8 +278,15 @@ class MyState extends State {
       }
     }
 
-    for(var e in removed) {
-      entities.remove(e);
+
+    for (var e in entities) {
+      var flicker = e[Types.FLICKER];
+      if(flicker != null) {
+        flicker.leftTicks -= 1;
+        if(flicker.leftTicks <= 0) {
+          e.comps[Types.FLICKER] = null;
+        }
+      }
     }
 
     if(totalTime > 10000 + 10 * 10000) {
@@ -295,21 +302,19 @@ class MyState extends State {
     }
 
 
-    List<Entity> removed2 = [];
     for(var e in entities) {
       if(e[Types.TIMED] != null) {
         Timed t = e[Types.TIMED];
         t.dt -= dt;
         if(t.dt < 0.0) {
-          removed2.add(e);
+          removed.add(e);
         }
       }
     }
     
-    for(var e in removed2) {
+    for(var e in removed) {
       entities.remove(e);
     }
-
     
     var collidables = [];
     for(var e in entities) {
@@ -475,6 +480,7 @@ class MyState extends State {
         var flicker = e[Types.FLICKER];
         if(flicker != null) {
           flicker.leftTicks -= 1;
+
         }
         if(flicker != null && flicker.off) {
           continue;
