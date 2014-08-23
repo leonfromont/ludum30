@@ -1,16 +1,12 @@
 loading screen
 boss?
 
-destroy bullets when they're out of screen
-
 high score i.e. distance
 
 levels?
 
-stop player from moving off screen
 chargers should go in random directions
 need a bit of random on cooldown times
-
 
 should be able to shoot chargers?
 

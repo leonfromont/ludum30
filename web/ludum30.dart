@@ -185,6 +185,7 @@ class MyState extends State {
   int b = -WIDTH;
 
 
+  Rect SCREEN = new Rect(0, 64, WIDTH, HEIGHT);
   static int STATE_GAMEPLAY = 0;
   static int STATE_GAMEOVER = 1;
   static int STATE_TITLE = 2;
@@ -239,6 +240,22 @@ class MyState extends State {
       return;
     }
 
+    // see whether there any ents we can dispose of
+    List<Entity> removed = [];
+    for(var e in entities) {
+      CollisionMask mask = e[Types.COLLISION];
+      if(mask != null && (mask.name == 'enemybullet' || mask.name == 'playerbullet')) {
+        // check if its offscreen
+        if(!SCREEN.contains(e[Types.AABB])) {
+          removed.add(e);
+        }
+      }
+    }
+
+    for(var e in removed) {
+      entities.remove(e);
+    }
+
     if(totalTime > 10000 + 10 * 10000) {
       STATE_CURRENT = STATE_WON;
     }
@@ -252,18 +269,18 @@ class MyState extends State {
     }
 
 
-    List<Entity> removed = [];
+    List<Entity> removed2 = [];
     for(var e in entities) {
       if(e[Types.TIMED] != null) {
         Timed t = e[Types.TIMED];
         t.dt -= dt;
         if(t.dt < 0.0) {
-          removed.add(e);
+          removed2.add(e);
         }
       }
     }
     
-    for(var e in removed) {
+    for(var e in removed2) {
       entities.remove(e);
     }
 
@@ -386,7 +403,7 @@ class MyState extends State {
     var old = aabb.clone();
     aabb.topleft = aabb.topleft + speed * p;
 
-    if(!new Rect(0, 64, WIDTH, HEIGHT).contains(aabb)) {
+    if(!SCREEN.contains(aabb)) {
       player.comps[Types.AABB] = old;
     }
 
@@ -480,6 +497,8 @@ class MyState extends State {
 
       ctx.fillStyle = '#00ff00';
       ctx.fillRect(horizontalpad + (totalTime / 1000).toInt(), top + padding, 4, height);
+
+      ctx.fillText('ents: ' + entities.length.toString(), 256, 256);
 
       // need to debounce both of these states
     } else if (STATE_CURRENT == STATE_GAMEOVER) {
