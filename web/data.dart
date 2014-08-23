@@ -191,7 +191,7 @@ Wave wave2(dt) {
 
 List<Wave> makewaves() {
     var waves = [];
-    for(int i = 0; i < 10; i++) {
+    for(int i = 0; i < 20; i++) {
       waves.add(monkey(i * 5000));
     }
     //var waves = [monkey(2), wave3(10000), wave2(20000)];

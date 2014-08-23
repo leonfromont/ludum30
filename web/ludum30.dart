@@ -216,6 +216,10 @@ class MyState extends State {
   int b = -WIDTH;
 
 
+  // once you have lasted longer than this
+  // you win
+  static int TOTALTIME = 10000 + 10 * 10000;
+
   Rect SCREEN = new Rect(0, 64, WIDTH, HEIGHT);
   static int STATE_GAMEPLAY = 0;
   static int STATE_GAMEOVER = 1;
@@ -300,7 +304,8 @@ class MyState extends State {
       }
     }
 
-    if(totalTime > 10000 + 10 * 10000) {
+    // TODO: check if there are any entitites left
+    if(totalTime > TOTALTIME) {
       STATE_CURRENT = STATE_WON;
     }
 
@@ -544,7 +549,7 @@ class MyState extends State {
 
       
       ctx.fillStyle = '#438c43';
-      ctx.fillRect(horizontalpad, top, 256, height + 2 * padding);
+      ctx.fillRect(horizontalpad, top, horizontalpad + (TOTALTIME / 1000), height + 2 * padding);
 
       ctx.fillStyle = '#ff0000';
       for(var wave in waves) {
@@ -554,7 +559,6 @@ class MyState extends State {
       ctx.fillStyle = '#00ff00';
       ctx.fillRect(horizontalpad + (totalTime / 1000).toInt(), top + padding, 4, height);
 
-      ctx.fillText('ents: ' + entities.length.toString(), 256, 256);
 
       // need to debounce both of these states
     } else if (STATE_CURRENT == STATE_GAMEOVER) {
