@@ -295,6 +295,9 @@ class MyState extends State {
     }
 
     for(Pair p in pairs) {
+      var e = Explosion(p.a[Types.AABB].topleft);
+      entities.add(e);
+
       if(p.a[Types.PLAYERHEALTH] != null) {
         p.a[Types.PLAYERHEALTH].current -= 1;
         entities.remove(p.b);
@@ -309,8 +312,6 @@ class MyState extends State {
 
       entities.remove(p.a);
       entities.remove(p.b);
-      var e = Explosion(p.a[Types.AABB].topleft);
-      entities.add(e);
     }
 
 
