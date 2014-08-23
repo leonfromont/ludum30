@@ -1,6 +1,24 @@
 import 'dart:html';
 import 'package:ad/ad.dart';
 
+class Entity {
+  static int nextId = 0;
+  int ID;
+
+  List comps = [];
+
+
+  Entity(Map<int, dynamic> args) {
+    nextId += 1;
+    ID = nextId;
+    comps = new List(64);
+
+    for(int s in args.keys) {
+      comps[s] = args[s];
+    }
+  }
+}
+
 class Aspect {
   List<int> types;
 
@@ -8,7 +26,7 @@ class Aspect {
 
   bool match(var e) {
     for(var t in types) {
-      if(e[t] == null) {
+      if(e.comps[t] == null) {
         return false;
       }
     }
@@ -23,14 +41,19 @@ class Types {
   static int POSITION = 2;
   static int PATH = 3;
   static int VELOCITY = 4;
+  static int COLLISION = 5;
 }
 
-abstract class Component {
-  int TAG;
+abstract class Component {}
+
+class CollisionMask extends Component {
+  String name;
+  List<String> mask;
+
+  CollisionMask(this.name, this.mask);
 }
 
 class PlayerBullet extends Component {
-  int TAG = Types.PLAYERBULLET;
   
   num cooldown;
   num dt;
@@ -49,15 +72,27 @@ class Render extends Component {
 }
 
 class SpriteSheet {
-  static Rect player = new Rect(0, 34, 34, 68);
+  static Rect player = new Rect(0, 34, 68, 34);
   static Rect bullet = new Rect(0, 0, 34, 34);
+  static Rect monster = new Rect(68, 0, 68, 68);
+}
+
+dynamic StraightEnemy() {
+  var e = new Entity({
+          Types.RENDER : new Render(SpriteSheet.monster),
+          Types.POSITION : new Vector(400, 128),
+          Types.COLLISION : new CollisionMask('enemy', ['playerbullet'])
+  });
+
+
+  return e;
 }
 
 ImageElement el = new ImageElement();
 
 
 class MyState extends State { 
-  List entities = [];
+  List<Entity> entities = [];
   var player = null;
   
   Rect a = new Rect(0, 0, 32, 32);
@@ -69,26 +104,48 @@ class MyState extends State {
   
   MyState() {
     el.src = './spritesheet.png';
-    var e = {
+    Entity e = new Entity({
             Types.RENDER : new Render(SpriteSheet.player),
             Types.POSITION : new Vector(128, 128),
             Types.PLAYERBULLET : new PlayerBullet(1000)
-    };
+    });
 
     entities.add(e);
     player = e;
+
+    entities.add(StraightEnemy());
   }
   
   void update (num dt) {
+    var collidables = [];
+    for(var e in entities) {
+      if(e.comps[Types.COLLISION] != null) {
+        collidables.add(e); 
+      }
+    }
+
+    for(var e0 in collidables) {
+      for(var e1 in collidables) {
+        CollisionMask c0 = e0.comps[Types.COLLISION];
+        CollisionMask c1 = e1.comps[Types.COLLISION];
+        
+        if(c0.mask.contains(c1.name) &&
+            c1.mask.contains(c0.name)) {
+          print('tag!');
+        }
+      }
+    }
+
+
     Aspect physics = new Aspect([Types.POSITION, Types.VELOCITY]);
     
     for(var e in entities) {
     if(physics.match(e)) {
-        e[Types.POSITION] = e[Types.POSITION] + e[Types.VELOCITY] * dt;
+        e.comps[Types.POSITION] = e.comps[Types.POSITION] + e.comps[Types.VELOCITY] * dt;
       }
     }
     
-    player[Types.PLAYERBULLET].cooldown -= dt;
+    player.comps[Types.PLAYERBULLET].cooldown -= dt;
     
     
     path.update(dt / 1000.0);
@@ -112,22 +169,21 @@ class MyState extends State {
     speed.normalize();
     
     
-    player[Types.POSITION] = player[Types.POSITION] + speed * p;
-    print(player[Types.POSITION]);
+    player.comps[Types.POSITION] = player.comps[Types.POSITION] + speed * p;
     
     if(parent.currentlyPressedKeys.contains(KeyCode.SPACE)) {
-      var comp = player[Types.PLAYERBULLET];
+      var comp = player.comps[Types.PLAYERBULLET];
       if(comp.cooldown <= 0.0) {
         comp.cooldown = comp.dt;
-        Vector v = player[Types.POSITION].clone();
+        Vector v = player.comps[Types.POSITION].clone();
         
-        var e = {
+        var e = new Entity({
                  Types.PLAYERBULLET :  new PlayerBullet(1.0),
                  Types.RENDER : new Render(new Rect(0, 0, 32, 32)),
                  Types.POSITION : v,
-                 Types.VELOCITY : new Vector(2, 0)
-
-        };
+                 Types.VELOCITY : new Vector(2, 0),
+                 Types.COLLISION : new CollisionMask('playerbullet', ["enemy"])
+        });
         
         entities.add(e);
       }
@@ -140,14 +196,14 @@ class MyState extends State {
     
     for (var e in entities) {
       if (render.match(e)) {
-        Render r = e[Types.RENDER];
+        Render r = e.comps[Types.RENDER];
         ctx.drawImageScaledFromSource(el, 
             r.spritesheet.left, 
             r.spritesheet.top, 
             r.spritesheet.width, 
             r.spritesheet.height, 
-            e[Types.POSITION].x, 
-            e[Types.POSITION].y, 
+            e.comps[Types.POSITION].x, 
+            e.comps[Types.POSITION].y, 
             r.spritesheet.width, 
             r.spritesheet.height);
       }
