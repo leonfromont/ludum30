@@ -71,7 +71,7 @@ class MyState extends State {
     el.src = './spritesheet.png';
     var e = {
             Types.RENDER : new Render(SpriteSheet.player),
-            Types.POSITION : new Vector(0, 0),
+            Types.POSITION : new Vector(128, 128),
             Types.PLAYERBULLET : new PlayerBullet(1000)
     };
 
@@ -93,18 +93,27 @@ class MyState extends State {
     
     path.update(dt / 1000.0);
     
+    Vector speed = new Vector(0, 0);
+    num p = 7.0;
+    
     if(parent.currentlyPressedKeys.contains(KeyCode.A)) {
-      player[Types.POSITION].x -= 1;
+      speed = speed + new Vector(-1, 0);
     }
     if(parent.currentlyPressedKeys.contains(KeyCode.D)) {
-      player[Types.POSITION].x += 1;
+      speed = speed + new Vector(1, 0);
     }
     if(parent.currentlyPressedKeys.contains(KeyCode.W)) {
-      player[Types.POSITION].y -= 1;
+      speed = speed + new Vector(0, -1);
     }
     if(parent.currentlyPressedKeys.contains(KeyCode.S)) {
-      player[Types.POSITION].y += 1;
+      speed = speed + new Vector(0, 1);
     }
+    
+    speed.normalize();
+    
+    
+    player[Types.POSITION] = player[Types.POSITION] + speed * p;
+    print(player[Types.POSITION]);
     
     if(parent.currentlyPressedKeys.contains(KeyCode.SPACE)) {
       var comp = player[Types.PLAYERBULLET];
