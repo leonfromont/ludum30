@@ -10,7 +10,3 @@ get rid of wave indicators or have them as debug
 
 game over needs to be clearer
 
-THIS ONE
-should be able to shoot chargers?
-why did we make it a bullet - so it could collide with player...
-

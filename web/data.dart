@@ -25,7 +25,7 @@ dynamic Player() {
           Types.RENDER : new Render(SpriteSheet.player),
           Types.AABB : new Rect(128, 128, 64, 32),
           Types.PLAYERBULLET : new PlayerBullet(1000),
-          Types.COLLISION : new CollisionMask('player', ["enemybullet"]),
+          Types.COLLISION : new CollisionMask('player', ["enemybullet", 'charger']),
           Types.PLAYERHEALTH : new PlayerHealth(3)
   });
   
@@ -57,7 +57,7 @@ dynamic _PlayerBullet(Rect v) {
            Types.RENDER : new Render(SpriteSheet.bulletplayer),
            Types.AABB : new Rect(v.left, v.top, 32, 32),
            Types.VELOCITY : new Vector(0.8, 0),
-           Types.COLLISION : new CollisionMask('playerbullet', ["enemy"])
+           Types.COLLISION : new CollisionMask('playerbullet', ["enemy", 'charger'])
   });
   
   return e;
@@ -68,7 +68,7 @@ dynamic Charger(Vector pos) {
            Types.RENDER : new Render(SpriteSheet.shell),
            Types.AABB : new Rect(pos.x, pos.y, 64, 32),
            Types.VELOCITY : new Vector(-0.2, 0),
-           Types.COLLISION : new CollisionMask('enemybullet', ["player"])
+           Types.COLLISION : new CollisionMask('charger', ["player", 'playerbullet'])
   });
 
   return e;

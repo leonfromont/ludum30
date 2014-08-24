@@ -271,7 +271,7 @@ class MyState extends State {
         loadWorld();
         STATE_CURRENT = STATE_GAMEPLAY;
       }
-    } if(STATE_CURRENT == STATE_WON) {
+    } if(STATE_CURRENT == STATE_WON || STATE_CURRENT == STATE_TITLE) {
       return;
     }
 
@@ -584,10 +584,13 @@ class MyState extends State {
       ctx.font="32px Georgia";
       ctx.fillStyle = '#00ff00';
       String text = 'IUNIUS';
-      ctx.fillText(text, 32, 32);
+      ctx.fillText(text, 128, 64);
       
       ctx.font="20px Georgia";
-      ctx.fillText('Press any key to start', 64, 64);
+      ctx.fillText('Press any key to start', 128, 128);
+
+
+      ctx.fillText('Arrow keys to move. Space to fire.', 128, 128 + 32);
 
     } else if(STATE_CURRENT == STATE_WON) {
       ctx.fillStyle = '#452555';
