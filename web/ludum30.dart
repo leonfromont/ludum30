@@ -527,7 +527,7 @@ class MyState extends State {
               r.spritesheet.height);
 
           if(false) {
-            ctx.fillStyle = '#ff0000';
+            ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
             ctx.fillRect(e[Types.AABB].left,
                           e[Types.AABB].top,
                           e[Types.AABB].width,
@@ -537,7 +537,7 @@ class MyState extends State {
       }
 
       // HUD 
-      ctx.fillStyle = '#000000';
+      ctx.fillStyle = Colors.HUD_bg;
       ctx.fillRect(0, 0, 512, 72);
       int hudtop = 364;
       int hudwidth = 36;
@@ -563,15 +563,15 @@ class MyState extends State {
 
 
       
-      ctx.fillStyle = '#438c43';
-      ctx.fillRect(horizontalpad, top, horizontalpad + (TOTALTIME / 1000), height + 2 * padding);
+      ctx.fillStyle = Colors.progress_bg;
+      ctx.fillRect(horizontalpad, top, (horizontalpad - 16) + (TOTALTIME / 1000), height + 2 * padding);
 
-      ctx.fillStyle = '#ff0000';
+      ctx.fillStyle = Colors.progress_markers;
       for(var wave in waves) {
         ctx.fillRect(horizontalpad + (wave.dt / 1000).toInt(), top + padding, 4, height);
       }
 
-      ctx.fillStyle = '#00ff00';
+      ctx.fillStyle = Colors.progress_current;
       ctx.fillRect(horizontalpad + (totalTime / 1000).toInt(), top + padding, 4, height);
 
 

@@ -24,6 +24,10 @@ class Colors {
   static String bg = '#452555';
   static String light_bg = '#9550b7';
   static String text = '#00ff00';
+  static String progress_bg = '#438c43';
+  static String progress_markers = '#ff0000';
+  static String progress_current = '#00ff00';
+  static String HUD_bg = '#000000';
 }
 
 dynamic Player() {
