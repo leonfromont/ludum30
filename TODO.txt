@@ -5,10 +5,12 @@ high score i.e. distance
 
 chargers should go in random directions
 
-should be able to shoot chargers?
 
 get rid of wave indicators or have them as debug
 
 game over needs to be clearer
 
-check hitboxes!!!
+THIS ONE
+should be able to shoot chargers?
+why did we make it a bullet - so it could collide with player...
+

@@ -439,17 +439,19 @@ class MyState extends State {
     
     Vector speed = new Vector(0, 0);
     num p = 7.0;
+
+    var keys = parent.currentlyPressedKeys;
     
-    if(parent.currentlyPressedKeys.contains(KeyCode.A)) {
+    if(keys.contains(KeyCode.A) || keys.contains(KeyCode.LEFT)) {
       speed = speed + new Vector(-1, 0);
     }
-    if(parent.currentlyPressedKeys.contains(KeyCode.D)) {
+    if(keys.contains(KeyCode.D) || keys.contains(KeyCode.RIGHT)) {
       speed = speed + new Vector(1, 0);
     }
-    if(parent.currentlyPressedKeys.contains(KeyCode.W)) {
+    if(keys.contains(KeyCode.W) || keys.contains(KeyCode.UP)) {
       speed = speed + new Vector(0, -1);
     }
-    if(parent.currentlyPressedKeys.contains(KeyCode.S)) {
+    if(keys.contains(KeyCode.S) || keys.contains(KeyCode.DOWN)) {
       speed = speed + new Vector(0, 1);
     }
     
@@ -518,6 +520,14 @@ class MyState extends State {
               e.comps[Types.AABB].top, 
               r.spritesheet.width, 
               r.spritesheet.height);
+
+          if(false) {
+            ctx.fillStyle = '#ff0000';
+            ctx.fillRect(e[Types.AABB].left,
+                          e[Types.AABB].top,
+                          e[Types.AABB].width,
+                          e[Types.AABB].height);
+          }
         }
       }
 

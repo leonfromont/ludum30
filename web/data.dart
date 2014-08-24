@@ -23,7 +23,7 @@ class Constants {
 dynamic Player() {
   Entity e = new Entity({
           Types.RENDER : new Render(SpriteSheet.player),
-          Types.AABB : new Rect(128, 128, 34, 68),
+          Types.AABB : new Rect(128, 128, 64, 32),
           Types.PLAYERBULLET : new PlayerBullet(1000),
           Types.COLLISION : new CollisionMask('player', ["enemybullet"]),
           Types.PLAYERHEALTH : new PlayerHealth(3)
