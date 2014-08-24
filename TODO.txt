@@ -1,11 +1,3 @@
-loading screen
-boss?
-
-high score i.e. distance
-
-chargers should go in random directions
-
-
 game over needs to be clearer
 debounce a bit shorter as well
 
