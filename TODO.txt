@@ -6,7 +6,8 @@ high score i.e. distance
 chargers should go in random directions
 
 
-get rid of wave indicators or have them as debug
-
 game over needs to be clearer
+debounce a bit shorter as well
+
+music
 

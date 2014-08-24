@@ -241,6 +241,8 @@ class MyState extends State {
   var player = null;
   MyState() {
     el.src = './spritesheet2.png';
+    
+    querySelector('#load').remove();
     loadWorld();
   }
 
