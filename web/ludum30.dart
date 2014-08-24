@@ -221,13 +221,17 @@ class MyState extends State {
   static int TOTALTIME = 10000 + 10 * 10000;
 
   Rect SCREEN = new Rect(0, 64, WIDTH, HEIGHT);
+
+  // clip ship
+  Rect SCREEN2 = new Rect(0, 64, WIDTH, HEIGHT - 64);
+
   static int STATE_GAMEPLAY = 0;
   static int STATE_GAMEOVER = 1;
   static int STATE_TITLE = 2;
   static int STATE_WON = 3;
   static int STATE_CURRENT = STATE_TITLE;
 
-  static int maxkeycooldown = 180;
+  static int maxkeycooldown = 120;
   int keycooldown = maxkeycooldown;
 
   num totalTime = 0.0;
@@ -256,8 +260,7 @@ class MyState extends State {
   }
   
   void update(num dt) {
-
-    if(STATE_CURRENT == STATE_GAMEOVER) {
+    if(STATE_CURRENT == STATE_GAMEOVER || STATE_CURRENT == STATE_WON) {
       keycooldown -= 1;
       if(keycooldown > 0) {
         return;
@@ -463,7 +466,7 @@ class MyState extends State {
     var old = aabb.clone();
     aabb.topleft = aabb.topleft + speed * p;
 
-    if(!SCREEN.contains(aabb)) {
+    if(!SCREEN2.contains(aabb)) {
       player.comps[Types.AABB] = old;
     }
 
@@ -484,7 +487,7 @@ class MyState extends State {
     if(STATE_CURRENT == STATE_GAMEPLAY) {
       
       Aspect render = new Aspect([Types.AABB, Types.RENDER]);
-      ctx.fillStyle = '#452555';
+      ctx.fillStyle = Colors.bg;
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
 
@@ -574,17 +577,33 @@ class MyState extends State {
 
       // need to debounce both of these states
     } else if (STATE_CURRENT == STATE_GAMEOVER) {
+
+      ctx.fillStyle = Colors.light_bg;
+      ctx.fillRect(128, 128, 256, 256);
+
       ctx.font="20px Georgia";
-      ctx.fillStyle = '#00ff00';
-      ctx.fillText('GAME OVER', WIDTH / 2, HEIGHT / 2);
-      ctx.fillText('Press any key to restart', WIDTH / 2, HEIGHT / 2 + 32);
+      ctx.fillStyle = Colors.text;
+      ctx.fillText('GAME OVER', 128 + 32, 128 + 32);
+      ctx.fillText('Press any key to restart', 128 + 32, 256);
 
     } else if(STATE_CURRENT == STATE_TITLE) {
-      ctx.fillStyle = '#452555';
+
+
+      ctx.fillStyle = Colors.bg;
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
+      
+      ctx.drawImageScaledFromSource(el, 
+          SpriteSheet.Earth.left, 
+          SpriteSheet.Earth.top, 
+          SpriteSheet.Earth.width, 
+          SpriteSheet.Earth.height, 
+          256, 
+          256, 
+          SpriteSheet.Earth.width, 
+          SpriteSheet.Earth.height);
 
       ctx.font="32px Georgia";
-      ctx.fillStyle = '#00ff00';
+      ctx.fillStyle = Colors.text;
       String text = 'IUNIUS';
       ctx.fillText(text, 128, 64);
       
@@ -595,11 +614,31 @@ class MyState extends State {
       ctx.fillText('Arrow keys to move. Space to fire.', 128, 128 + 32);
 
     } else if(STATE_CURRENT == STATE_WON) {
-      ctx.fillStyle = '#452555';
+      ctx.fillStyle = Colors.bg;
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
+      ctx.drawImageScaledFromSource(el, 
+          SpriteSheet.Earth.left, 
+          SpriteSheet.Earth.top, 
+          SpriteSheet.Earth.width, 
+          SpriteSheet.Earth.height, 
+          256, 
+          256, 
+          SpriteSheet.Earth.width, 
+          SpriteSheet.Earth.height);
+
+      ctx.drawImageScaledFromSource(el, 
+          SpriteSheet.player.left, 
+          SpriteSheet.player.top, 
+          SpriteSheet.player.width, 
+          SpriteSheet.player.height, 
+          128, 
+          128, 
+          SpriteSheet.player.width, 
+          SpriteSheet.player.height);
+
       ctx.font="20px Georgia";
-      ctx.fillStyle = '#00ff00';
+      ctx.fillStyle = Colors.text;
       String text = 'YOU HAVE MADE IT TO IUNIUS';
       ctx.fillText(text, 32, 32);
     }

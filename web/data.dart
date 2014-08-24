@@ -20,6 +20,12 @@ class Constants {
   static int PATH_HEIGHT = 30;
 }
 
+class Colors {
+  static String bg = '#452555';
+  static String light_bg = '#9550b7';
+  static String text = '#00ff00';
+}
+
 dynamic Player() {
   Entity e = new Entity({
           Types.RENDER : new Render(SpriteSheet.player),

@@ -1,5 +1,5 @@
-game over needs to be clearer
 debounce a bit shorter as well
 
 music
+render world and ship on finish screen
 
