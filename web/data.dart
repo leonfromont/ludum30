@@ -22,7 +22,7 @@ class Constants {
 
 class Colors {
   static String bg = '#452555';
-  static String light_bg = '#9550b7';
+  static String light_bg = '#AA5585';
   static String text = '#00ff00';
   static String progress_bg = '#805215';
   static String progress_markers = '#FFDBAA';

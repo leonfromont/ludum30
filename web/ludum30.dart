@@ -180,7 +180,7 @@ class SpriteSheet {
   static Rect player = new Rect(0, 32, 64, 32);
   static Rect bulletenemy = new Rect(0, 0, 32, 32);
   static Rect bulletplayer = new Rect(32, 0, 32, 32);
-  static Rect monster = new Rect(64, 0, 64, 64);
+  static Rect monster = new Rect(64, 0, 64, 63);
   static Rect monsterpurple = new Rect(128, 0, 64, 64);
   static Rect shell = new Rect(192, 0, 64, 32);
   static Rect Explosion = new Rect(0, 64, 64, 64);
@@ -559,12 +559,10 @@ class MyState extends State {
       int height = 32;
       int padding = 4;
       int horizontalpad = 16;
-      //ctx.fillRect(500, top, 4, height);
-
 
       
       ctx.fillStyle = Colors.progress_bg;
-      ctx.fillRect(horizontalpad, top, (horizontalpad - 16) + (TOTALTIME / 1000), height + 2 * padding);
+      ctx.fillRect(horizontalpad - padding, top, (horizontalpad - 16) + (TOTALTIME / 1000), height + 2 * padding);
 
       ctx.fillStyle = Colors.progress_markers;
       for(var wave in waves) {
